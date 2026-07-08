@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Reflex Pro - Luyện Nói Phản Xạ Không Gián Đoạn</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 50% 50%, #090d16 0%, #02050c 100%);
+        }
+        .glass-card {
+            background: rgba(13, 20, 35, 0.75);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+        .glow-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.45);
+            transform: translateY(-2px);
+        }
+        .wave-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 24px;
+        }
+        .wave-bar {
+            width: 3px;
+            height: 6px;
+            background-color: #10b981;
+            border-radius: 9999px;
+            animation: bounce 0.8s ease-in-out infinite;
+        }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+        @keyframes bounce {
+            0%, 100% { height: 6px; }
+            50% { height: 24px; }
+        }
+        .progress-bar-fill {
+            transition: width 1.5s linear;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #02050c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <!-- Global Header -->
+    <header class="border-b border-slate-850 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-3.5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 via-emerald-500 to-sky-500 flex items-center justify-center shadow-lg shadow-indigo-500/15 relative overflow-hidden">
+                    <i class="fa-solid fa-microphone-lines text-white text-xl z-10"></i>
+                    <div class="absolute inset-0 bg-black opacity-10 animate-pulse"></div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-indigo-300 bg-clip-text text-transparent">English Reflex Pro</h1>
+                        <span class="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">V1.8 - Custom DB & Challenge</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-medium">Hệ thống luyện phản xạ nghe - nói liên tục không gián đoạn quyền Micro</p>
+                </div>
+            </div>
+            
+            <!-- Game Stats Dashboard -->
+            <div class="flex flex-wrap items-center justify-center gap-3 text-xs">
+                <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold shadow-sm">
+                    <i class="fa-solid fa-fire text-base animate-bounce"></i>
+                    <span>Streak: <span id="streakCount">0</span> Ngày</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold shadow-sm">
+                    <i class="fa-solid fa-bolt-lightning text-base"></i>
+                    <span>Điểm: <span id="xpCount">0</span> XP</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-bold shadow-sm">
+                    <i class="fa-solid fa-circle-check text-base"></i>
+                    <span>Đã thuộc: <span id="masteredCount">0</span> câu</span>
+                </div>
+                <button onclick="resetStats()" class="p-2.5 rounded-2xl bg-slate-900 hover:bg-rose-500/15 text-slate-400 hover:text-rose-400 transition-all border border-slate-800" title="Đặt lại tiến trình">
+                    <i class="fa-solid fa-arrows-rotate text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- App Main Layout -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Navigation, Configuration & Importer (4 cols) -->
+        <section class="lg:col-span-4 flex flex-col gap-5">
+            
+            <!-- 3 Practice Method Selector -->
+            <div class="glass-card rounded-3xl p-5 flex flex-col gap-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Phương pháp phản xạ</h3>
+                
+                <button onclick="switchTab('flashcard')" id="tab-flashcard" class="w-full flex items-center gap-3.5 px-4.5 py-4 rounded-2xl text-left font-medium transition-all duration-200 bg-indigo-600 text-white shadow-lg shadow-indigo-600/20">
+                    <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-arrows-left-right text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold uppercase tracking-wide">1. Dịch Nghịch Phản Xạ</div>
+                        <div class="text-[10px] opacity-80 mt-0.5">Nhìn nghĩa Việt bật giọng nói Anh</div>
+                    </div>
+                </button>
+
+                <button onclick="switchTab('substitution')" id="tab-substitution" class="w-full flex items-center gap-3.5 px-4.5 py-4 rounded-2xl text-left font-medium transition-all duration-200 text-slate-400 hover:bg-slate-900 hover:text-white border border-transparent hover:border-slate-800">
+                    <div class="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-arrows-spin text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold uppercase tracking-wide">2. Thay Thế Từ Khóa</div>
+                        <div class="text-[10px] opacity-80 mt-0.5">Linh hoạt biến đổi từ vựng mới</div>
+                    </div>
+                </button>
+
+                <button onclick="switchTab('monologue')" id="tab-monologue" class="w-full flex items-center gap-3.5 px-4.5 py-4 rounded-2xl text-left font-medium transition-all duration-200 text-slate-400 hover:bg-slate-900 hover:text-white border border-transparent hover:border-slate-800">
+                    <div class="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-circle-nodes text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold uppercase tracking-wide">3. Bài Nói Hoàn Chỉnh</div>
+                        <div class="text-[10px] opacity-80 mt-0.5">Kết nối câu theo sơ đồ tư duy</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Intelligent Mic Controller -->
+            <div class="glass-card rounded-3xl p-5 flex flex-col gap-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Cấu hình Micro thông minh</h3>
+                
+                <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-xs font-black text-emerald-400 uppercase tracking-wide">Giữ Micro Luôn Bật</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input type="checkbox" id="continuousMicToggle" onchange="toggleContinuousMicMode()" class="sr-only peer" checked>
+                            <div class="w-10 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-white"></div>
+                        </label>
+                    </div>
+                    <p class="text-[10px] text-slate-400 leading-relaxed">Hệ thống mở Micro một lần duy nhất lúc bắt đầu. Giúp bạn liên tục luyện nói không bị trình duyệt nhảy thông báo xin quyền phiền hà.</p>
+                </div>
+
+                <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                            <span class="text-xs font-black text-sky-400 uppercase tracking-wide">Tự động chuyển câu</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input type="checkbox" id="autoNextToggle" onchange="toggleAutoNextMode()" class="sr-only peer" checked>
+                            <div class="w-10 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500 peer-checked:after:bg-white"></div>
+                        </label>
+                    </div>
+                    <p class="text-[10px] text-slate-400 leading-relaxed">Khi bạn nói chính xác (khớp trên 65%), hệ thống sẽ tự động chuyển sang cấu trúc tiếp theo sau 1.5 giây mà không cần bấm nút thủ công.</p>
+                </div>
+
+                <div id="micStatusBadge" class="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                    <i class="fa-solid fa-microphone-slash"></i>
+                    <span>Micro đang tạm nghỉ</span>
+                </div>
+
+                <div class="pt-3 border-t border-slate-800/80 flex justify-between items-center text-xs text-slate-400">
+                    <span>Chế độ gõ bàn phím (Dự phòng):</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="keyboardModeToggle" onchange="toggleKeyboardMode()" class="sr-only peer">
+                        <div class="w-8 h-4 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600 peer-checked:after:bg-white"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- DYNAMIC DATABASE IMPORT / MANAGEMENT CARD -->
+            <div class="glass-card rounded-3xl p-5 flex flex-col gap-3">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Import chủ đề & mẫu câu</h3>
+                    <i class="fa-solid fa-file-import text-indigo-400"></i>
+                </div>
+                <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 flex flex-col gap-3 text-xs">
+                    <p class="text-[10px] text-slate-400 leading-relaxed">Dán trực tiếp văn bản từ bảng CSV (ngăn cách bằng dấu phẩy/tab) hoặc tải lên tệp tin CSV/JSON.</p>
+                    
+                    <div class="flex flex-col gap-2">
+                        <textarea id="csvImportArea" rows="3" placeholder="SentenceID,PatternID,Pattern_TopicType,OutlinePartName..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-[10px] text-slate-300 font-mono focus:outline-none focus:border-indigo-500 no-scrollbar"></textarea>
+                        
+                        <div class="flex gap-2">
+                            <input type="file" id="fileImportInput" accept=".csv,.json" class="hidden" onchange="handleFileImport(event)">
+                            <button onclick="document.getElementById('fileImportInput').click()" class="flex-1 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-200 transition-all font-bold text-[10px] flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-file-arrow-up"></i> Chọn tệp CSV/JSON
+                            </button>
+                            <button onclick="processTextImport()" class="flex-1 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-all font-bold text-[10px] flex items-center justify-center gap-1 shadow-md shadow-indigo-600/10">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Nạp cơ sở dữ liệu
+                            </button>
+                        </div>
+                        
+                        <button onclick="restoreOriginalDataset()" class="w-full py-1.5 rounded-xl bg-rose-950/20 border border-rose-900/30 text-rose-300 hover:bg-rose-950/40 text-[10px] font-bold transition-all flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-rotate-left"></i> Khôi phục 86 mẫu câu gốc
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject/Topic list catalog (Tree) -->
+            <div class="glass-card rounded-3xl p-5 flex flex-col gap-3">
+                <div class="flex justify-between items-center mb-1">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Chủ đề bài mẫu</h3>
+                    <span class="text-[10px] bg-slate-800 px-2.5 py-0.5 rounded-full font-bold" id="topicTotalBadge">4 Nhóm lớn</span>
+                </div>
+                
+                <div class="flex flex-col gap-2 max-h-[300px] overflow-y-auto pr-1" id="topicCategories">
+                    <!-- Dynamic topics render here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Workspace & Visual Interactive Panels (8 cols) -->
+        <section class="lg:col-span-8 flex flex-col gap-6">
+            
+            <!-- AUTO-NEXT TIMER VISUAL BAR -->
+            <div id="autoNextProgressContainer" class="hidden w-full bg-slate-900/60 rounded-full h-2.5 border border-slate-800 overflow-hidden relative">
+                <div id="autoNextProgressBar" class="bg-gradient-to-r from-sky-400 to-indigo-500 h-full w-0 progress-bar-fill"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-[8px] font-black tracking-widest uppercase text-sky-300">Đang tự chuyển phản xạ tiếp theo...</div>
+            </div>
+
+            <!-- TAB 1 PANEL: Vietnamese-to-English Flashcard -->
+            <div id="panel-flashcard" class="tab-panel flex flex-col gap-6">
+                <div class="glass-card rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
+                    <div class="flex justify-between items-center text-xs font-bold tracking-wider uppercase text-indigo-400">
+                        <span id="flashcardTopicName">Chủ đề: Nạp dữ liệu...</span>
+                        <span id="flashcardCountIndicator" class="px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-bold">Mẫu 1/5</span>
+                    </div>
+
+                    <!-- Prompt area -->
+                    <div class="flex flex-col items-center justify-center py-10 min-h-[200px] text-center gap-3 bg-slate-950/40 rounded-3xl border border-slate-900">
+                        <div class="text-[10px] text-slate-500 font-extrabold tracking-widest flex items-center gap-1.5 uppercase">
+                            <i class="fa-solid fa-language text-sm text-indigo-400"></i> Ý nghĩ tiếng Việt
+                        </div>
+                        <p id="flashcardVietnamese" class="text-xl md:text-2xl font-black leading-relaxed text-slate-100 max-w-2xl px-4">
+                            "Mọi người thường chú ý đến nụ cười của tôi."
+                        </p>
+                    </div>
+
+                    <!-- Keyboard Entry Block -->
+                    <div id="keyboardInputSection" class="hidden flex-col gap-2.5 p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nhập câu dịch tiếng Anh của bạn:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="keyboardAnswerField" placeholder="Gõ câu dịch tiếng Anh tại đây..." class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition-all">
+                            <button onclick="checkKeyboardAnswer()" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition-all shadow-md">Kích hoạt</button>
+                        </div>
+                    </div>
+
+                    <!-- Grading voice feedback circle -->
+                    <div id="voiceResultBox" class="hidden flex flex-col gap-3.5 p-5 rounded-2xl bg-slate-900/60 border border-slate-850">
+                        <div class="flex items-center justify-between text-xs font-semibold">
+                            <span class="text-slate-400 flex items-center gap-2">
+                                <i class="fa-solid fa-microphone-lines text-rose-500 animate-pulse"></i>
+                                Ghi nhận giọng của bạn:
+                            </span>
+                            <span id="speechMatchPercent" class="font-bold px-3 py-1 rounded-xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm">Khớp 0%</span>
+                        </div>
+                        <p id="speechTranscript" class="italic text-base text-slate-200 font-bold">"Sẵn sàng thu âm..."</p>
+                    </div>
+
+                    <!-- Hidden English Model Card -->
+                    <div id="flashcardAnswerBox" class="hidden flex flex-col gap-4 p-5 rounded-2xl bg-indigo-950/20 border border-indigo-500/20 transition-all duration-300">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-black tracking-wider text-indigo-400 uppercase flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400"></i> Đáp án tiếng Anh chuẩn mẫu câu
+                            </span>
+                            <button onclick="speakTargetText()" class="w-10 h-10 rounded-xl bg-sky-500/15 text-sky-400 hover:bg-sky-500/25 flex items-center justify-center transition-all" title="Nghe mẫu phát âm">
+                                <i class="fa-solid fa-volume-high text-sm"></i>
+                            </button>
+                        </div>
+                        <p id="flashcardEnglish" class="text-lg md:text-xl font-extrabold text-emerald-400">People often notice my smile.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-850 pt-4 text-xs">
+                            <div class="flex flex-col gap-1.5">
+                                <span class="font-bold text-slate-400 uppercase text-[9px] tracking-wider">Cấu trúc ngữ pháp (Grammar):</span> 
+                                <code id="flashcardGrammar" class="px-3 py-1.5 rounded bg-slate-950 text-indigo-300 border border-slate-800 font-mono text-xs select-all">S + notice + noun</code>
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <span class="font-bold text-slate-400 uppercase text-[9px] tracking-wider">Từ khóa cốt lõi (Keywords):</span> 
+                                <span id="flashcardKeywords" class="text-amber-400 font-semibold bg-amber-400/10 px-3 py-1.5 rounded border border-amber-400/20 text-xs">notice</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interface control actions -->
+                    <div class="flex flex-wrap items-center justify-center gap-4 border-t border-slate-850 pt-6">
+                        <button id="btnStartSpeak" onclick="toggleSpeechRecognition()" class="flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-500 text-white glow-button transition-all">
+                            <i class="fa-solid fa-microphone text-base"></i>
+                            <span id="btnSpeakText">Bắt đầu luyện phản xạ</span>
+                        </button>
+
+                        <button id="btnShowAnswer" onclick="revealFlashcardAnswer()" class="flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition-all">
+                            <i class="fa-solid fa-eye text-base"></i>
+                            <span>Xem đáp án</span>
+                        </button>
+
+                        <button id="btnNextFlashcard" onclick="nextFlashcard()" class="hidden flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition-all">
+                            <span>Chuyển mẫu câu tiếp</span>
+                            <i class="fa-solid fa-arrow-right text-base"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2 PANEL: Substitution Drills -->
+            <div id="panel-substitution" class="tab-panel hidden flex flex-col gap-6">
+                <div class="glass-card rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-500 to-orange-400"></div>
+
+                    <div class="flex justify-between items-center text-xs font-bold tracking-wider uppercase text-amber-400">
+                        <span>Luyện thay thế từ khóa (Substitution Drills)</span>
+                        <span id="subCountIndicator" class="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 font-bold">Mẫu 1/5</span>
+                    </div>
+
+                    <!-- Original grammatical pattern framework -->
+                    <div class="bg-slate-950/40 rounded-2xl p-5 border border-slate-900 flex flex-col gap-3">
+                        <div class="text-[10px] text-slate-500 font-extrabold tracking-wider uppercase">Cấu trúc gốc quy định (Pattern):</div>
+                        <div id="drillPattern" class="text-lg md:text-xl font-extrabold text-amber-300 tracking-wide">
+                            I currently live in + <span class="bg-amber-500/10 text-amber-300 px-2.5 py-0.5 rounded border border-amber-500/20 font-black">[place]</span>
+                        </div>
+                        <div class="text-xs text-slate-400 mt-1">
+                            <span class="font-bold">Công thức:</span> <code id="drillGrammar" class="px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">S + live in + place</code>
+                        </div>
+                    </div>
+
+                    <!-- Word choices grid replacements -->
+                    <div class="flex flex-col gap-3">
+                        <div class="text-[10px] font-bold text-slate-400 flex items-center gap-1.5 uppercase tracking-wider">
+                            <i class="fa-solid fa-cubes text-amber-400 text-xs"></i> Lựa chọn các từ thay thế để biến đổi cấu trúc:
+                        </div>
+                        <div id="drillChips" class="flex flex-wrap gap-2">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <!-- Manual customized replacement input -->
+                        <div class="flex gap-2.5 mt-2">
+                            <input type="text" id="customSubInput" placeholder="Tự điền từ thế cá nhân của bạn (ví dụ: Da Lat, a vintage house)..." class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all">
+                            <button onclick="applyCustomKeyword()" class="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all">
+                                Điền mới
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Synthesis Dynamic Outcome Sentence -->
+                    <div class="bg-indigo-950/20 rounded-2xl p-6 border border-indigo-500/10 text-center flex flex-col items-center justify-center gap-3">
+                        <div class="text-[9px] text-indigo-400 font-extrabold tracking-wider uppercase">Câu phát sinh (Hãy phát âm mẫu này)</div>
+                        <div id="completedSentence" class="text-lg md:text-xl font-extrabold text-white tracking-wide leading-relaxed">
+                            I currently live in <span class="text-amber-300 border-b-2 border-dashed border-amber-400 font-black">Ho Chi Minh City</span>.
+                        </div>
+                        <p id="completedSentenceTranslation" class="text-xs md:text-sm text-slate-400 italic">"Tôi hiện tại đang sống ở Thành phố Hồ Chí Minh."</p>
+                        
+                        <button onclick="speakCompletedSentence()" class="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold transition-all">
+                            <i class="fa-solid fa-volume-high text-sky-400"></i>
+                            <span>Nghe giọng phát âm mẫu</span>
+                        </button>
+                    </div>
+
+                    <!-- Keyboard substitute validation -->
+                    <div id="subKeyboardSection" class="hidden flex-col gap-2.5 p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gõ lại chính xác câu ghép ở trên:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="subKeyboardAnswerField" placeholder="Nhập câu tiếng Anh đã biến đổi..." class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-amber-500 transition-all">
+                            <button onclick="checkSubKeyboardAnswer()" class="px-5 py-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition-all shadow-md">Kiểm tra</button>
+                        </div>
+                    </div>
+
+                    <!-- Realtime sub transcription feedback -->
+                    <div id="subVoiceResult" class="hidden flex flex-col gap-3.5 p-5 rounded-2xl bg-slate-900/60 border border-slate-850">
+                        <div class="flex items-center justify-between text-xs font-semibold">
+                            <span class="text-slate-400 flex items-center gap-2">
+                                <i class="fa-solid fa-microphone-lines text-rose-500 animate-pulse"></i>
+                                Ghi nhận giọng của bạn:
+                            </span>
+                            <span id="subMatchPercent" class="font-bold px-3 py-1 rounded-xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm">Khớp 0%</span>
+                        </div>
+                        <p id="subTranscript" class="italic text-base text-slate-200 font-bold">"Sẵn sàng thu âm..."</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center gap-4 border-t border-slate-850 pt-6">
+                        <button id="btnSubSpeak" onclick="toggleSpeechRecognition()" class="flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 glow-button transition-all">
+                            <i class="fa-solid fa-microphone text-slate-950"></i>
+                            <span>Bắt đầu nói thay thế</span>
+                        </button>
+                        <button onclick="nextSubDrill()" class="flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition-all">
+                            <span>Chuyển mẫu tiếp theo</span>
+                            <i class="fa-solid fa-forward text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3 PANEL: Topic-based Monologues -->
+            <div id="panel-monologue" class="tab-panel hidden flex flex-col gap-6">
+                <div class="glass-card rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
+
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs font-bold tracking-wider uppercase text-emerald-400">Bài nói liên kết câu chuyện (Monologue)</span>
+                            <span id="monoTopicName" class="text-[10px] text-slate-400 font-medium">Chủ đề: Đang tải...</span>
+                        </div>
+                        
+                        <!-- FEATURE: DIFFICULTY SELECTOR LEVEL 1 / LEVEL 2 -->
+                        <div class="flex items-center gap-1.5 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-850 self-start sm:self-auto shrink-0">
+                            <span class="text-[9px] text-slate-500 font-black uppercase tracking-wider px-2">Độ khó:</span>
+                            <button onclick="setMonoDifficulty(1)" id="btnMonoDiff1" class="px-3.5 py-1.5 rounded-xl text-[10px] font-black transition-all bg-emerald-600 text-white shadow-md">
+                                Cấp độ 1: Mẫu câu
+                            </button>
+                            <button onclick="setMonoDifficulty(2)" id="btnMonoDiff2" class="px-3.5 py-1.5 rounded-xl text-[10px] font-black transition-all text-slate-400 hover:text-slate-200">
+                                Cấp độ 2: Từ khóa & Nghĩa Việt
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Steps progress outline navigator -->
+                    <div class="flex items-center justify-start overflow-x-auto pb-2 gap-2.5 border-b border-slate-850 no-scrollbar" id="monoStepsBar">
+                        <!-- Filled dynamically -->
+                    </div>
+
+                    <!-- Split screen for monologue step details -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                        
+                        <!-- Left outline part detail -->
+                        <div class="lg:col-span-5 flex flex-col gap-4 p-5 rounded-2xl bg-slate-950/40 border border-slate-900" id="monoLeftPanelContainer">
+                            <div>
+                                <span class="px-2.5 py-1 rounded-lg bg-indigo-500/10 text-indigo-300 text-[10px] font-black uppercase tracking-widest" id="monoStepPart">Phân đoạn: Introduction</span>
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <span class="text-[9px] text-slate-500 font-extrabold tracking-wider uppercase">Sơ đồ ý nghĩa cần bật nói:</span>
+                                <p id="monoStepVN" class="text-sm font-bold text-slate-200 leading-relaxed">Giới thiệu tên, nghề nghiệp của bạn.</p>
+                            </div>
+                            
+                            <!-- This formula container will hide in Level 2 -->
+                            <div class="flex flex-col gap-1.5 mt-1 transition-all" id="monoFormulaBlock">
+                                <span class="text-[9px] text-slate-500 font-extrabold tracking-wider uppercase">Cú pháp cấu trúc khuyên dùng:</span>
+                                <code id="monoStepPattern" class="text-xs text-sky-300 font-semibold bg-sky-950/30 p-2.5 rounded-xl border border-sky-900/20 font-mono">My name is + N. I work as + job</code>
+                            </div>
+                        </div>
+
+                        <!-- Right reference model and live recording result -->
+                        <div class="lg:col-span-7 flex flex-col justify-between p-5 rounded-2xl bg-indigo-950/10 border border-indigo-500/10 min-h-[220px]">
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[9px] text-emerald-400 font-bold tracking-widest uppercase" id="monoRightLabel">Mẫu câu nói chuẩn tham khảo</span>
+                                    <button onclick="speakMonoExample()" id="btnSpeakMonoExample" class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 flex items-center justify-center transition-all">
+                                        <i class="fa-solid fa-volume-high text-xs"></i>
+                                    </button>
+                                </div>
+                                <div id="monoStepMainDisplay">
+                                    <p id="monoStepExample" class="text-base font-extrabold text-white leading-relaxed">"My name is An. I work as a marketer."</p>
+                                    <p id="monoStepExampleVN" class="text-xs text-slate-400 italic">"Tên tôi là An. Tôi làm việc như một nhà tiếp thị."</p>
+                                </div>
+                            </div>
+
+                            <!-- Keyboard entry for Step monologue -->
+                            <div id="monoKeyboardSection" class="hidden flex-col gap-2 mt-3 pt-3 border-t border-slate-800">
+                                <span class="text-[9px] text-slate-400 font-bold uppercase">Nhập bài nói của bạn:</span>
+                                <div class="flex gap-2">
+                                    <input type="text" id="monoKeyboardField" placeholder="Gõ câu trả lời tiếng Anh..." class="flex-grow bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500">
+                                    <button onclick="checkMonoKeyboardAnswer()" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-bold text-xs">OK</button>
+                                </div>
+                            </div>
+
+                            <!-- Voice transcript feedback -->
+                            <div class="mt-4 pt-3 border-t border-slate-850 flex flex-col gap-2">
+                                <div class="flex justify-between items-center text-[10px] font-semibold">
+                                    <span class="text-slate-400 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-microphone-lines text-rose-500 animate-pulse"></i>
+                                        Phản xạ ghi nhận:
+                                    </span>
+                                    <span id="monoStepScore" class="font-bold px-2.5 py-0.5 rounded text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 font-mono">Khớp: 0%</span>
+                                </div>
+                                <p id="monoStepTranscript" class="text-xs font-bold italic text-slate-300 bg-slate-950/40 p-3 rounded-xl border border-slate-900 min-h-[50px] leading-relaxed">"Sẵn sàng thu âm..."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation triggers -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 border-t border-slate-850 pt-5">
+                        <button onclick="prevMonoStep()" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-chevron-left"></i> Quay lại
+                        </button>
+
+                        <button id="btnMonoSpeak" onclick="toggleSpeechRecognition()" class="flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white glow-button transition-all">
+                            <i class="fa-solid fa-microphone text-base"></i>
+                            <span>Bắt đầu nói phân đoạn</span>
+                        </button>
+
+                        <button onclick="nextMonoStep()" class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all flex items-center gap-2">
+                            <span>Kế tiếp</span> <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Finalized Full Story Presentation Summary Block -->
+                <div id="monologueReportBox" class="glass-card rounded-[32px] p-6 border border-emerald-500/20 hidden flex flex-col gap-4">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                        <h3 class="text-base font-black text-emerald-400 flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                            <span>BÀI DIỄN THUYẾT GHÉP CÂU TOÀN DIỆN</span>
+                        </h3>
+                        <button onclick="playFullMonologue()" class="px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-circle-play text-sm"></i> Nghe trí tuệ nhân tạo đọc mẫu toàn bài
+                        </button>
+                    </div>
+                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-slate-850 text-slate-200 leading-relaxed text-sm italic" id="fullSpeechTranscripts">
+                        <!-- Accumulated paragraphs step-by-step -->
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">Xuất sắc! Bằng cách ghép các mẫu phản xạ độc lập theo cấu trúc mẫu, bạn vừa tạo ra một bài diễn thuyết liền mạch kéo dài 1-2 phút chuẩn văn phong bản xứ!</p>
+                </div>
+            </div>
+
+            <!-- FEATURE: EXCEL/CSV DATA VIEWER & SEARCH PREVIEW CARD -->
+            <div class="glass-card rounded-[32px] p-6 border border-slate-800 flex flex-col gap-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                            <i class="fa-solid fa-database text-xs"></i>
+                        </span>
+                        <div>
+                            <h3 class="text-sm font-extrabold text-slate-200">Trình xem & Duyệt cơ sở dữ liệu hiện có</h3>
+                            <p class="text-[10px] text-slate-400">Xem trực quan toàn bộ ngân hàng câu hỏi hiện tại trong ứng dụng</p>
+                        </div>
+                    </div>
+                    <span id="previewDatabaseCounter" class="text-[10px] bg-slate-900 border border-slate-800 px-3 py-1 rounded-xl font-bold text-slate-300">86 Mẫu câu</span>
+                </div>
+
+                <!-- Live database searching tool -->
+                <div class="flex items-center gap-2">
+                    <div class="relative flex-grow">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input type="text" id="dbSearchField" onkeyup="filterPreviewDatabase()" placeholder="Tìm kiếm nhanh mẫu câu, ví dụ hoặc nghĩa tiếng Việt..." class="w-full bg-slate-950 border border-slate-850 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                    </div>
+                    <button onclick="refreshPreviewDatabaseTable()" class="p-2.5 rounded-xl bg-slate-950 border border-slate-850 hover:bg-slate-900 text-slate-400 hover:text-slate-200 transition-all" title="Làm mới bảng">
+                        <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Database Live Scroll Table Container -->
+                <div class="max-h-[350px] overflow-y-auto border border-slate-850/60 rounded-2xl bg-slate-950/40">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/60 text-slate-400 border-b border-slate-850 sticky top-0 backdrop-blur-md z-10">
+                                <th class="p-3 font-bold uppercase tracking-wider text-[9px]">ID</th>
+                                <th class="p-3 font-bold uppercase tracking-wider text-[9px]">Chủ đề & Phân loại</th>
+                                <th class="p-3 font-bold uppercase tracking-wider text-[9px]">Cấu trúc (Pattern)</th>
+                                <th class="p-3 font-bold uppercase tracking-wider text-[9px]">Câu Tiếng Anh chuẩn (Example)</th>
+                                <th class="p-3 font-bold uppercase tracking-wider text-[9px]">Dịch Example</th>
+                            </tr>
+                        </thead>
+                        <tbody id="previewDatabaseBody" class="divide-y divide-slate-850/40">
+                            <!-- Table Rows rendered via javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Custom Notification Toast Component -->
+    <div id="customToast" class="fixed bottom-5 right-5 z-50 glass-card border border-indigo-500/30 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-slate-100 font-bold text-xs transform translate-y-20 opacity-0 transition-all duration-300">
+        <i class="fa-solid fa-circle-info text-indigo-400 text-base animate-bounce"></i> 
+        <span id="toastMessage">Thông báo</span>
+    </div>
+
+    <!-- App Footer -->
+    <footer class="border-t border-slate-850 bg-slate-950/40 py-5 px-4 text-center text-xs text-slate-500 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>© 2026 English Reflex Pro. Luyện phản xạ cấu trúc ngữ pháp thông minh.</div>
+            <div class="flex items-center gap-4">
+                <a href="#" class="hover:text-indigo-400 transition-colors">Hướng dẫn</a>
+                <span class="text-slate-800">|</span>
+                <a href="#" class="hover:text-indigo-400 transition-colors">Dữ liệu 86 chủ đề mẫu câu</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Code App -->
+    <script>
+        // Standard high fidelity 86-sentence dataset structured directly based on user's exact spreadsheet.
+        const defaultDataset = {
+            "Describe_Person": {
+                category: "Mô tả người & Bản thân",
+                name: "Describe Person (Mô tả Bản thân)",
+                icon: "fa-user-astronaut",
+                color: "indigo",
+                items: [
+                    { id: "P001", part: "Introduction", pattern: "My name is + [Name]", grammar: "S + be + name", vietnamese: "Tên tôi là [Tên].", example: "My name is Minh.", exampleVN: "Tên tôi là Minh.", keywords: ["name"], substitutes: ["Minh", "An", "John", "Sarah", "Emily"] },
+                    { id: "P002", part: "Introduction", pattern: "I am + [age] + years old", grammar: "S + be + age", vietnamese: "Tôi [Số tuổi] tuổi.", example: "I am 43 years old.", exampleVN: "Tôi 43 tuổi.", keywords: ["age"], substitutes: ["43", "18", "25", "30", "35"] },
+                    { id: "P003", part: "Introduction", pattern: "I come from + [place]", grammar: "S + come from + place", vietnamese: "Tôi đến từ [Nơi chốn].", example: "I come from Tien Giang.", exampleVN: "Tôi đến từ Tiền Giang.", keywords: ["come from"], substitutes: ["Tien Giang", "Hanoi", "Da Nang", "Nha Trang", "London"] },
+                    { id: "P004", part: "Introduction", pattern: "I currently live in + [place]", grammar: "S + live in + place", vietnamese: "Tôi hiện sống ở [Nơi chốn].", example: "I currently live in Ho Chi Minh City.", exampleVN: "Tôi hiện sống ở TP.HCM.", keywords: ["currently live in"], substitutes: ["Ho Chi Minh City", "Hanoi", "a quiet suburb", "a modern apartment", "Da Lat"] },
+                    { id: "P005", part: "Introduction", pattern: "I work as + [job]", grammar: "S + work as + job", vietnamese: "Tôi làm việc với tư cách là một [Công việc].", example: "I work as an engineer.", exampleVN: "Tôi làm kỹ sư.", keywords: ["work as"], substitutes: ["an engineer", "a marketer", "a teacher", "a designer", "a developer"] },
+                    { id: "P006", part: "Introduction", pattern: "I would like to introduce myself as + [noun]", grammar: "S + would like to + V", vietnamese: "Tôi muốn giới thiệu mình là [Danh từ].", example: "I would like to introduce myself as a lifelong learner.", exampleVN: "Tôi muốn giới thiệu mình là người học tập suốt đời.", keywords: ["would like to introduce"], substitutes: ["a lifelong learner", "a tech enthusiast", "a travel lover", "an optimistic person"] },
+                    { id: "P007", part: "Introduction", pattern: "People know me as + [noun]", grammar: "S + know + O + as + N", vietnamese: "Mọi người biết tôi là một [Danh từ].", example: "People know me as a dedicated teacher.", exampleVN: "Mọi người biết tôi là một giáo viên tận tâm.", keywords: ["People know me as"], substitutes: ["a dedicated teacher", "a creative designer", "a reliable friend", "a hard worker"] },
+                    { id: "P008", part: "Appearance", pattern: "I am + [adjective]", grammar: "S + be + adj", vietnamese: "Tôi trông [Tính từ].", example: "I am tall and slim.", exampleVN: "Tôi cao và gầy.", keywords: ["appearance"], substitutes: ["tall and slim", "athletic", "of medium height", "energetic and fit"] },
+                    { id: "P009", part: "Appearance", pattern: "I have + [adjective_noun]", grammar: "S + have + noun", vietnamese: "Tôi có [Danh từ tả ngoại hình].", example: "I have short black hair.", exampleVN: "Tôi có tóc đen ngắn.", keywords: ["have"], substitutes: ["short black hair", "long wavy hair", "brown eyes", "a friendly face"] },
+                    { id: "P010", part: "Appearance", pattern: "I usually wear + [noun]", grammar: "S + wear + noun", vietnamese: "Tôi thường mặc [Đồ].", example: "I usually wear casual clothes.", exampleVN: "Tôi thường mặc đồ thường ngày.", keywords: ["wear"], substitutes: ["casual clothes", "a professional suit", "jeans and a T-shirt", "comfortable sportswear"] },
+                    { id: "P011", part: "Appearance", pattern: "People often notice my + [noun]", grammar: "S + notice + noun", vietnamese: "Mọi người thường chú ý đến [Danh từ ngoại hình] của tôi.", example: "People often notice my smile.", exampleVN: "Mọi người thường chú ý đến nụ cười của tôi.", keywords: ["notice"], substitutes: ["smile", "glasses", "energetic posture", "bright eyes"] },
+                    { id: "P012", part: "Appearance", pattern: "I am known for + [noun]", grammar: "S + be known for + noun", vietnamese: "Tôi được biết đến với [Danh từ ngoại hình].", example: "I am known for my friendly smile.", exampleVN: "Tôi được biết đến với nụ cười thân thiện.", keywords: ["known for"], substitutes: ["my friendly smile", "my elegant style", "my neat appearance", "my expressive eyes"] },
+                    { id: "P013", part: "Appearance", pattern: "One noticeable feature is + [noun]", grammar: "One feature + be + noun", vietnamese: "Một đặc điểm nổi bật là [Danh từ ngoại hình] của tôi.", example: "One noticeable feature is my curly hair.", exampleVN: "Một đặc điểm nổi bật là mái tóc xoăn của tôi.", keywords: ["One noticeable feature"], substitutes: ["my curly hair", "my height", "my bright smile", "my dimples"] },
+                    { id: "P014", part: "Appearance", pattern: "I would describe myself as + [adjective]", grammar: "S + describe + O + as + adj", vietnamese: "Tôi tự mô tả mình là người [Tính từ].", example: "I would describe myself as energetic.", exampleVN: "Tôi tự mô tả mình là người năng động.", keywords: ["describe"], substitutes: ["energetic", "neat", "simple and casual", "professional"] },
+                    { id: "P015", part: "Personality", pattern: "I am + [adjective]", grammar: "S + be + adj", vietnamese: "Tôi thì [Tính cách].", example: "I am friendly.", exampleVN: "Tôi thân thiện.", keywords: ["friendly"], substitutes: ["friendly", "kind", "easygoing", "cheerful"] },
+                    { id: "P016", part: "Personality", pattern: "I am quite + [adjective]", grammar: "S + be + adv + adj", vietnamese: "Tôi khá là [Tính cách].", example: "I am quite patient.", exampleVN: "Tôi khá kiên nhẫn.", keywords: ["quite patient"], substitutes: ["patient", "shy", "ambitious", "creative"] },
+                    { id: "P017", part: "Personality", pattern: "I tend to be + [adjective]", grammar: "S + tend to + be", vietnamese: "Tôi có xu hướng [Tính cách].", example: "I tend to be optimistic.", exampleVN: "Tôi có xu hướng lạc quan.", keywords: ["tend to be"], substitutes: ["optimistic", "introverted", "talkative", "cautious"] },
+                    { id: "P018", part: "Personality", pattern: "I consider myself + [adjective]", grammar: "S + consider + O + adj", vietnamese: "Tôi cho rằng bản thân mình [Tính cách].", example: "I consider myself hardworking.", exampleVN: "Tôi cho rằng mình chăm chỉ.", keywords: ["consider myself"], substitutes: ["hardworking", "responsible", "punctual", "organized"] },
+                    { id: "P019", part: "Personality", pattern: "People often describe me as + [adjective]", grammar: "S + describe + O + as + adj", vietnamese: "Mọi người thường mô tả tôi là [Tính cách].", example: "People often describe me as reliable.", exampleVN: "Mọi người thường mô tả tôi là đáng tin cậy.", keywords: ["People often describe me as"], substitutes: ["reliable", "helpful", "independent", "funny"] },
+                    { id: "P020", part: "Personality", pattern: "One of my strengths is + [noun]", grammar: "One of + possessive + noun + be", vietnamese: "Một trong những điểm mạnh của tôi là [Tính cách/Điểm mạnh].", example: "One of my strengths is perseverance.", exampleVN: "Một trong những điểm mạnh của tôi là sự kiên trì.", keywords: ["One of my strengths is"], substitutes: ["perseverance", "adaptability", "problem-solving", "creativity"] },
+                    { id: "P021", part: "Hobby", pattern: "I like + [V-ing]", grammar: "S + like + Ving", vietnamese: "Tôi thích [Hoạt động].", example: "I like reading books.", exampleVN: "Tôi thích đọc sách.", keywords: ["like"], substitutes: ["reading books", "cooking meals", "traveling", "playing football"] },
+                    { id: "P022", part: "Hobby", pattern: "My favorite hobby is + [noun]", grammar: "S + favorite + noun + be", vietnamese: "Sở thích yêu thích của tôi là [Danh từ].", example: "My favorite hobby is drawing.", exampleVN: "Sở thích yêu thích của tôi là vẽ.", keywords: ["My favorite hobby is"], substitutes: ["drawing", "gardening", "photography", "listening to music"] },
+                    { id: "P023", part: "Hobby", pattern: "I enjoy + [V-ing]", grammar: "S + enjoy + Ving", vietnamese: "Tôi yêu thích [Hoạt động].", example: "I enjoy learning English.", exampleVN: "Tôi thích học tiếng Anh.", keywords: ["enjoy"], substitutes: ["learning English", "jogging", "cooking", "watching movies"] },
+                    { id: "P024", part: "Hobby", pattern: "I spend a lot of time + [V-ing]", grammar: "S + spend time + Ving", vietnamese: "Tôi dành nhiều thời gian [Hoạt động].", example: "I spend a lot of time watching documentaries.", exampleVN: "Tôi dành nhiều thời gian xem phim tài liệu.", keywords: ["spend a lot of time"], substitutes: ["watching documentaries", "practicing guitar", "browsing the internet", "swimming"] },
+                    { id: "P025", part: "Hobby", pattern: "One activity I am passionate about is + [noun]", grammar: "S + be passionate about + noun", vietnamese: "Một hoạt động tôi đam mê là [Danh từ].", example: "One activity I am passionate about is photography.", exampleVN: "Một hoạt động tôi đam mê là nhiếp ảnh.", keywords: ["One activity I am passionate about is"], substitutes: ["photography", "coding", "hiking", "blogging"] },
+                    { id: "P026", part: "Hobby", pattern: "I find + [noun] + relaxing", grammar: "S + find + noun + adj", vietnamese: "Tôi thấy việc [Danh từ/V-ing] rất thư giãn.", example: "I find gardening relaxing.", exampleVN: "Tôi thấy làm vườn rất thư giãn.", keywords: ["find + N + relaxing"], substitutes: ["gardening", "listening to music", "reading books", "cooking"] },
+                    { id: "P027", part: "DailyLife", pattern: "I usually + [verb]", grammar: "S + usually + V", vietnamese: "Tôi thường xuyên [Hành động].", example: "I usually get up at 6 a.m.", exampleVN: "Tôi thường thức dậy lúc 6 giờ sáng.", keywords: ["usually"], substitutes: ["get up at 6 a.m.", "have breakfast at home", "go to bed early", "read news in the morning"] },
+                    { id: "P028", part: "DailyLife", pattern: "Every day, I + [verb]", grammar: "Every day, S + V", vietnamese: "Mỗi ngày tôi [Hành động].", example: "Every day, I go to school.", exampleVN: "Mỗi ngày tôi đi học.", keywords: ["Every day,"], substitutes: ["go to school", "exercise for 30 minutes", "practice English speaking", "walk to the office"] },
+                    { id: "P029", part: "DailyLife", pattern: "I often + [verb]", grammar: "S + often + V", vietnamese: "Tôi thường [Hành động].", example: "I often exercise after work.", exampleVN: "Tôi thường tập thể dục sau giờ làm.", keywords: ["often"], substitutes: ["exercise after work", "cook dinner for my family", "listen to podcasts", "meet up with friends"] },
+                    { id: "P030", part: "DailyLife", pattern: "Most of my day is spent + [V-ing/V3]", grammar: "S + be spent + V3", vietnamese: "Phần lớn ngày của tôi dành cho [Hoạt động].", example: "Most of my day is spent studying.", exampleVN: "Phần lớn ngày của tôi dành cho việc học.", keywords: ["Most of my day is spent"], substitutes: ["studying", "working on the computer", "solving client issues", "attending meetings"] },
+                    { id: "P031", part: "DailyLife", pattern: "A typical day for me starts with + [noun]", grammar: "S + start with + noun", vietnamese: "Một ngày điển hình của tôi bắt đầu bằng [Danh từ].", example: "A typical day for me starts with a cup of coffee.", exampleVN: "Một ngày điển hình của tôi bắt đầu bằng một tách cà phê.", keywords: ["A typical day for me starts with"], substitutes: ["a cup of coffee", "a light breakfast", "a short walk", "some stretching exercises"] },
+                    { id: "P032", part: "DailyLife", pattern: "I try to maintain a balanced + [noun]", grammar: "S + try to + V", vietnamese: "Tôi cố gắng duy trì một [Danh từ] cân bằng.", example: "I try to maintain a balanced routine.", exampleVN: "Tôi cố gắng duy trì một lịch trình cân bằng.", keywords: ["try to"], substitutes: ["routine", "lifestyle", "diet", "mindset"] }
+                ]
+            },
+            "Describe_Place": {
+                category: "Mô tả địa điểm",
+                name: "Describe Place (Mô tả Địa điểm)",
+                icon: "fa-map-location-dot",
+                color: "sky",
+                items: [
+                    { id: "P033", part: "Location", pattern: "It is in + [place]", grammar: "S + be in + place", vietnamese: "Nó ở [Địa điểm].", example: "It is in the city center.", exampleVN: "Nó ở trung tâm thành phố.", keywords: ["location"], substitutes: ["the city center", "the northern part of Vietnam", "a cozy neighborhood", "the quiet countryside"] },
+                    { id: "P034", part: "Location", pattern: "It is located near + [noun]", grammar: "S + be located near + noun", vietnamese: "Nó nằm gần [Danh từ].", example: "It is located near my house.", exampleVN: "Nó nằm gần nhà tôi.", keywords: ["near"], substitutes: ["my house", "the local subway station", "a beautiful lake", "a bustling local market"] },
+                    { id: "P035", part: "Location", pattern: "You can find it + [preposition_noun]", grammar: "S + find + O", vietnamese: "Bạn có thể tìm thấy nó [Giới từ + Danh từ].", example: "You can find it next to the park.", exampleVN: "Bạn có thể tìm thấy nó cạnh công viên.", keywords: ["find"], substitutes: ["next to the park", "opposite the supermarket", "behind the ancient church", "near the high school"] },
+                    { id: "P036", part: "Location", pattern: "It is situated in + [place]", grammar: "S + be situated in + place", vietnamese: "Nó nằm trong [Địa điểm].", example: "It is situated in a quiet neighborhood.", exampleVN: "Nó nằm trong một khu dân cư yên tĩnh.", keywords: ["situated"], substitutes: ["a quiet neighborhood", "a historical town", "a valley", "the coastal region"] },
+                    { id: "P037", part: "Location", pattern: "It is easily accessible from + [place]", grammar: "S + be accessible from + place", vietnamese: "Nó dễ dàng tiếp cận từ [Địa điểm].", example: "It is easily accessible from downtown.", exampleVN: "Nó dễ dàng tiếp cận từ trung tâm thành phố.", keywords: ["access"], substitutes: ["downtown", "any part of the city", "the main highway", "the airport"] },
+                    { id: "P038", part: "Location", pattern: "It occupies a convenient location + [preposition_noun]", grammar: "S + occupy + location", vietnamese: "Nó có vị trí thuận tiện [Giới từ + Danh từ].", example: "It occupies a convenient location near public transport.", exampleVN: "Nó có vị trí thuận tiện gần phương tiện công cộng.", keywords: ["convenient"], substitutes: ["near public transport", "in the heart of the capital", "close to shopping malls", "by the riverbank"] },
+                    { id: "P039", part: "Appearance", pattern: "It is + [adjective]", grammar: "S + be + adj", vietnamese: "Nó thì [Tính từ].", example: "It is beautiful.", exampleVN: "Nó rất đẹp.", keywords: ["look"], substitutes: ["beautiful", "spacious", "cozy and warm", "extremely modern"] },
+                    { id: "P040", part: "Appearance", pattern: "It has + [adjective_noun]", grammar: "S + have + noun", vietnamese: "Nó có [Danh từ cấu trúc].", example: "It has large windows.", exampleVN: "Nó có những cửa sổ lớn.", keywords: ["size"], substitutes: ["large windows", "a high ceiling", "a modern interior design", "a lush green garden"] },
+                    { id: "P041", part: "Appearance", pattern: "The place looks + [adjective]", grammar: "S + look + adj", vietnamese: "Nơi đó trông [Tính từ].", example: "The place looks modern.", exampleVN: "Nơi đó trông hiện đại.", keywords: ["looks"], substitutes: ["modern", "ancient", "colorful and vibrant", "well-maintained"] },
+                    { id: "P042", part: "Appearance", pattern: "One thing I like about it is + [noun]", grammar: "S + like + noun", vietnamese: "Một điều tôi thích ở nó là [Danh từ].", example: "One thing I like about it is the view.", exampleVN: "Một điều tôi thích là quang cảnh.", keywords: ["like"], substitutes: ["the view", "the quietness", "the friendly people", "the delicious food selection"] },
+                    { id: "P043", part: "Appearance", pattern: "What makes it special is + [noun]", grammar: "What makes + O + adj", vietnamese: "Điều làm nó đặc biệt là [Danh từ].", example: "What makes it special is its peaceful atmosphere.", exampleVN: "Điều làm nó đặc biệt là bầu không khí yên bình.", keywords: ["special"], substitutes: ["its peaceful atmosphere", "the warm architecture", "the kind and helpful locals", "the rich historical background"] },
+                    { id: "P044", part: "Appearance", pattern: "It stands out because of + [noun]", grammar: "S + stand out because of + noun", vietnamese: "Nó nổi bật nhờ [Danh từ].", example: "It stands out because of its architecture.", exampleVN: "Nó nổi bật nhờ kiến trúc của mình.", keywords: ["standout"], substitutes: ["its architecture", "its signature design", "its giant ancient trees", "its vibrant color scheme"] },
+                    { id: "P045", part: "Reason", pattern: "I like it because + [clause]", grammar: "S + like + because", vietnamese: "Tôi thích nó vì [Mệnh đề].", example: "I like it because it is quiet.", exampleVN: "Tôi thích nó vì nó yên tĩnh.", keywords: ["because"], substitutes: ["it is quiet", "it helps me relax", "I can study without distraction", "the prices are affordable"] },
+                    { id: "P046", part: "Reason", pattern: "It is my favorite place because + [clause]", grammar: "S + be favorite because", vietnamese: "Đó là nơi yêu thích của tôi vì [Mệnh đề].", example: "It is my favorite place because it feels comfortable.", exampleVN: "Đó là nơi yêu thích của tôi vì nó tạo cảm giác thoải mái.", keywords: ["favorite"], substitutes: ["it feels comfortable", "it offers stunning views", "I can focus on my creative work", "it brings back childhood memories"] },
+                    { id: "P047", part: "Reason", pattern: "The main reason is that + [clause]", grammar: "The reason is that + clause", vietnamese: "Lý do chính là vì [Mệnh đề].", example: "The main reason is that it is convenient.", exampleVN: "Lý do chính là vì nó thuận tiện.", keywords: ["reason"], substitutes: ["it is convenient", "the atmosphere is refreshing", "it is highly accessible", "I can meet like-minded people"] },
+                    { id: "P048", part: "Reason", pattern: "I am particularly fond of it because + [clause]", grammar: "S + be fond of + because", vietnamese: "Tôi đặc biệt thích nơi đó vì [Mệnh đề].", example: "I am particularly fond of it because of the atmosphere.", exampleVN: "Tôi đặc biệt thích nơi đó vì bầu không khí.", keywords: ["fond"], substitutes: ["of the atmosphere", "it belongs to my close friend", "I can take beautiful photographs", "it inspires me every time I visit"] },
+                    { id: "P049", part: "Reason", pattern: "It holds special + [noun] + for me", grammar: "S + hold memories", vietnamese: "Nó lưu giữ [Danh từ số nhiều] đặc biệt đối với tôi.", example: "It holds special memories for me.", exampleVN: "Nó lưu giữ những kỷ niệm đặc biệt đối với tôi.", keywords: ["memories"], substitutes: ["memories", "stories", "feelings", "lessons"] },
+                    { id: "P050", part: "Reason", pattern: "I feel emotionally connected to this + [noun]", grammar: "S + feel connected to + noun", vietnamese: "Tôi cảm thấy gắn bó về mặt cảm xúc với [Danh từ] này.", example: "I feel emotionally connected to this place.", exampleVN: "Tôi cảm thấy gắn bó về mặt cảm xúc với nơi này.", keywords: ["connected"], substitutes: ["place", "neighborhood", "city", "house"] }
+                ]
+            },
+            "Describe_Object": {
+                category: "Mô tả đồ vật",
+                name: "Describe Object (Mô tả Sự vật)",
+                icon: "fa-laptop",
+                color: "purple",
+                items: [
+                    { id: "P051", part: "Introduction", pattern: "This is my + [noun]", grammar: "This + be + noun", vietnamese: "Đây là [Danh từ] của tôi.", example: "This is my bicycle.", exampleVN: "Đây là chiếc xe đạp của tôi.", keywords: ["object"], substitutes: ["bicycle", "laptop", "mechanical watch", "leather wallet", "smart phone"] },
+                    { id: "P052", part: "Introduction", pattern: "I have had it for + [time]", grammar: "S + have had + O + time", vietnamese: "Tôi đã có nó được [Thời gian].", example: "I have had it for three years.", exampleVN: "Tôi đã có nó được ba năm.", keywords: ["own"], substitutes: ["three years", "one month", "over a decade", "a long time", "five months"] },
+                    { id: "P053", part: "Introduction", pattern: "It belongs to + [person]", grammar: "S + belong to + noun", vietnamese: "Nó thuộc về [Danh từ chỉ người].", example: "It belongs to my father.", exampleVN: "Nó thuộc về bố tôi.", keywords: ["belong"], substitutes: ["my father", "my older sister", "me and my roommate", "my family"] },
+                    { id: "P054", part: "Introduction", pattern: "It was given to me by + [person]", grammar: "S + be given by + noun", vietnamese: "Nó được [Danh từ chỉ người] tặng cho tôi.", example: "It was given to me by my friend.", exampleVN: "Nó được bạn tôi tặng.", keywords: ["gift"], substitutes: ["my friend", "my parents on my birthday", "my university professor", "my beloved boss"] },
+                    { id: "P055", part: "Introduction", pattern: "It has been an important part of my + [noun]", grammar: "S + have been + noun", vietnamese: "Nó là một phần quan trọng trong [Danh từ] của tôi.", example: "It has been an important part of my life.", exampleVN: "Nó là một phần quan trọng trong cuộc sống của tôi.", keywords: ["important"], substitutes: ["life", "career", "journey"] },
+                    { id: "P056", part: "Introduction", pattern: "I have a strong + [noun] + to it", grammar: "S + have attachment to + noun", vietnamese: "Tôi có một [Danh từ] mạnh mẽ với nó.", example: "I have a strong attachment to it.", exampleVN: "Tôi có sự gắn bó mạnh mẽ với nó.", keywords: ["attachment"], substitutes: ["attachment", "connection", "bond", "feeling"] },
+                    { id: "P057", part: "Appearance", pattern: "It is + [adjective]", grammar: "S + be + adj", vietnamese: "Nó trông [Tính từ].", example: "It is small and light.", exampleVN: "Nó nhỏ và nhẹ.", keywords: ["size"], substitutes: ["small and light", "highly durable", "sleek and portable", "extremely robust"] },
+                    { id: "P058", part: "Appearance", pattern: "It is made of + [material]", grammar: "S + be made of + noun", vietnamese: "Nó được làm bằng [Chất liệu].", example: "It is made of wood.", exampleVN: "Nó được làm bằng gỗ.", keywords: ["material"], substitutes: ["wood", "premium aluminum", "durable plastic", "genuine leather", "stainless steel"] },
+                    { id: "P059", part: "Appearance", pattern: "It has + [adjective_noun]", grammar: "S + have + noun", vietnamese: "Nó có [Danh từ thiết kế].", example: "It has a modern design.", exampleVN: "Nó có thiết kế hiện đại.", keywords: ["feature"], substitutes: ["a modern design", "a sleek black finish", "multiple key buttons", "a high-resolution display"] },
+                    { id: "P060", part: "Appearance", pattern: "The color of it is + [adjective]", grammar: "S + be + color", vietnamese: "Màu của nó là [Màu sắc].", example: "The color of it is blue.", exampleVN: "Màu của nó là xanh dương.", keywords: ["color"], substitutes: ["blue", "matte black", "pearl white", "metallic silver"] },
+                    { id: "P061", part: "Appearance", pattern: "One striking feature is + [noun]", grammar: "One feature + be + noun", vietnamese: "Một đặc điểm nổi bật là [Danh từ].", example: "One striking feature is its simplicity.", exampleVN: "Một đặc điểm nổi bật là sự đơn giản của nó.", keywords: ["striking"], substitutes: ["its simplicity", "its high-speed performance", "its compact size", "its ergonomic structure"] },
+                    { id: "P062", part: "Appearance", pattern: "It has a distinctive + [noun]", grammar: "S + have appearance", vietnamese: "Nó có [Danh từ] đặc trưng.", example: "It has a distinctive appearance.", exampleVN: "Nó có vẻ ngoài đặc trưng.", keywords: ["distinctive"], substitutes: ["appearance", "texture", "style", "feel"] },
+                    { id: "P063", part: "Use", pattern: "I use it + [time/purpose]", grammar: "S + use + O", vietnamese: "Tôi sử dụng nó [Thời gian/Mục đích].", example: "I use it every day.", exampleVN: "Tôi sử dụng nó mỗi ngày.", keywords: ["use"], substitutes: ["every day", "for work", "every weekend", "when traveling"] },
+                    { id: "P064", part: "Use", pattern: "It helps me + [verb]", grammar: "S + help + O + V", vietnamese: "Nó giúp tôi [Động từ].", example: "It helps me study better.", exampleVN: "Nó giúp tôi học tốt hơn.", keywords: ["help"], substitutes: ["study better", "organize my tasks", "stay in touch with relatives", "capture high-quality memories"] },
+                    { id: "P065", part: "Use", pattern: "I often use it for + [noun]", grammar: "S + use for + noun", vietnamese: "Tôi thường dùng nó cho [Mục đích].", example: "I often use it for work.", exampleVN: "Tôi thường dùng nó cho công việc.", keywords: ["purpose"], substitutes: ["work", "studying English", "entertainment purpose", "navigating around city"] },
+                    { id: "P066", part: "Use", pattern: "It plays an important role in + [noun]", grammar: "S + play role in + noun", vietnamese: "Nó đóng vai trò quan trọng trong [Danh từ] của tôi.", example: "It plays an important role in my studies.", exampleVN: "Nó đóng vai trò quan trọng trong việc học của tôi.", keywords: ["role"], substitutes: ["my studies", "my career progress", "my daily commute", "my creative workflow"] },
+                    { id: "P067", part: "Use", pattern: "I rely on it whenever + [clause]", grammar: "S + rely on + noun", vietnamese: "Tôi dựa vào nó bất cứ khi nào [Mệnh đề].", example: "I rely on it whenever I travel.", exampleVN: "Tôi dựa vào nó bất cứ khi nào đi du lịch.", keywords: ["rely"], substitutes: ["I travel", "I have tight deadlines", "I need to look up information", "I work remotely"] },
+                    { id: "P068", part: "Use", pattern: "I cannot imagine my + [noun] + without it", grammar: "S + cannot imagine + noun", vietnamese: "Tôi không thể tưởng tượng [Danh từ] của tôi mà không có nó.", example: "I cannot imagine my life without it.", exampleVN: "Tôi không thể tưởng tượng cuộc sống thiếu nó.", keywords: ["without"], substitutes: ["life", "workdays", "daily studies", "routine"] }
+                ]
+            },
+            "Describe_Event": {
+                category: "Mô tả sự kiện",
+                name: "Describe Event (Mô tả Sự kiện)",
+                icon: "fa-calendar-check",
+                color: "emerald",
+                items: [
+                    { id: "P069", part: "Introduction", pattern: "I attended + [event]", grammar: "S + attend + noun", vietnamese: "Tôi đã tham dự [Sự kiện].", example: "I attended a birthday party.", exampleVN: "Tôi đã tham dự một bữa tiệc sinh nhật.", keywords: ["event"], substitutes: ["a birthday party", "a charity local event", "a major music concert", "a high school graduation ceremony", "a technology seminar"] },
+                    { id: "P070", part: "Introduction", pattern: "It took place + [time/place]", grammar: "S + take place", vietnamese: "Nó diễn ra vào [Thời gian/Địa điểm].", example: "It took place last weekend.", exampleVN: "Nó diễn ra vào cuối tuần trước.", keywords: ["takeplace"], substitutes: ["last weekend", "in the city center square", "two months ago", "at my high school campus"] },
+                    { id: "P071", part: "Introduction", pattern: "I was involved in + [noun]", grammar: "S + be involved in + noun", vietnamese: "Tôi đã tham gia vào [Danh từ].", example: "I was involved in a charity event.", exampleVN: "Tôi tham gia một sự kiện từ thiện.", keywords: ["involved"], substitutes: ["a charity event", "a sports team competition", "the project organizing committee", "a high-profile local workshop"] },
+                    { id: "P072", part: "Introduction", pattern: "It was organized by + [person]", grammar: "S + be organized by + noun", vietnamese: "Nó được tổ chức bởi [Cá nhân/Tổ chức].", example: "It was organized by my school.", exampleVN: "Nó được tổ chức bởi trường tôi.", keywords: ["organized"], substitutes: ["my school", "a local non-profit community", "a multinational tech company", "my closest childhood friend"] },
+                    { id: "P073", part: "Introduction", pattern: "It turned out to be + [adjective]", grammar: "S + turn out to be + adj", vietnamese: "Nó hóa ra là [Tính từ].", example: "It turned out to be unforgettable.", exampleVN: "Nó hóa ra thật khó quên.", keywords: ["result"], substitutes: ["unforgettable", "highly inspiring", "a bit chaotic", "extremely informative", "wildly successful"] },
+                    { id: "P074", part: "Introduction", pattern: "It remains one of the most memorable experiences + [preposition_noun]", grammar: "S + remain + noun", vietnamese: "Nó vẫn là một trong những trải nghiệm đáng nhớ nhất [Giới từ + Danh từ].", example: "It remains one of the most memorable experiences of my life.", exampleVN: "Nó vẫn là một trong những trải nghiệm đáng nhớ nhất đời tôi.", keywords: ["memorable"], substitutes: ["of my life", "from my high school years", "in my entire engineering career", "of my youth"] },
+                    { id: "P075", part: "Activities", pattern: "We + [verb_past] + together", grammar: "S + V together", vietnamese: "Chúng tôi đã cùng nhau [Hành động ở quá khứ].", example: "We played games together.", exampleVN: "Chúng tôi cùng chơi trò chơi.", keywords: ["together"], substitutes: ["played games", "sang joyful songs", "discussed future projects", "shared delicious meals", "took beautiful photos"] },
+                    { id: "P076", part: "Activities", pattern: "There were many + [noun]", grammar: "There be + noun", vietnamese: "Có rất nhiều [Danh từ số nhiều].", example: "There were many activities.", exampleVN: "Có nhiều hoạt động.", keywords: ["activities"], substitutes: ["activities", "engaging game segments", "talented guest speakers", "interactive photo booths"] },
+                    { id: "P077", part: "Activities", pattern: "Participants had the chance to + [verb]", grammar: "S + have chance to + V", vietnamese: "Người tham gia đã có cơ hội [Động từ].", example: "Participants had the chance to meet new people.", exampleVN: "Người tham gia có cơ hội gặp gỡ người mới.", keywords: ["chance"], substitutes: ["meet new people", "win valuable prizes", "ask deep industry questions", "try diverse street food"] },
+                    { id: "P078", part: "Activities", pattern: "One of the highlights was + [noun]", grammar: "One of the highlights + be", vietnamese: "Một trong những điểm nổi bật là [Danh từ].", example: "One of the highlights was the music show.", exampleVN: "Một trong những điểm nổi bật là chương trình âm nhạc.", keywords: ["highlight"], substitutes: ["the music show", "the interactive group quiz", "the keynote address by the CEO", "the surprise prize draw"] },
+                    { id: "P079", part: "Activities", pattern: "Everyone was actively engaged in + [noun/V-ing]", grammar: "S + engage in + noun", vietnamese: "Mọi người đều tích cực tham gia vào [Danh từ/Hoạt động].", example: "Everyone was actively engaged in discussions.", exampleVN: "Mọi người đều tích cực tham gia thảo luận.", keywords: ["engaged"], substitutes: ["discussions", "the practical team activities", "cheering for the candidates", "playing physical sports games"] },
+                    { id: "P080", part: "Activities", pattern: "The event offered a variety of + [noun]", grammar: "S + offer + noun", vietnamese: "Sự kiện cung cấp nhiều [Danh từ số nhiều].", example: "The event offered a variety of activities.", exampleVN: "Sự kiện cung cấp nhiều hoạt động đa dạng.", keywords: ["variety"], substitutes: ["activities", "practical training workshops", "local cultural food dishes", "networking sessions"] },
+                    { id: "P081", part: "Feeling", pattern: "I was + [adjective]", grammar: "S + be + adj", vietnamese: "Tôi đã cảm thấy [Tính từ].", example: "I was happy.", exampleVN: "Tôi rất vui.", keywords: ["happy"], substitutes: ["happy", "absolutely thrilled", "deeply relieved", "extremely satisfied"] },
+                    { id: "P082", part: "Feeling", pattern: "I felt excited about + [noun]", grammar: "S + feel + adj", vietnamese: "Tôi cảm thấy hào hứng về [Danh từ].", example: "I felt excited about the event.", exampleVN: "Tôi cảm thấy hào hứng với sự kiện.", keywords: ["excited"], substitutes: ["the event", "the wonderful learning outcome", "the connection I made with experts", "the upcoming plans"] },
+                    { id: "P083", part: "Feeling", pattern: "I really enjoyed + [noun]", grammar: "S + enjoy + noun", vietnamese: "Tôi thực sự thích [Danh từ].", example: "I really enjoyed the experience.", exampleVN: "Tôi thực sự thích trải nghiệm đó.", keywords: ["enjoyed"], substitutes: ["the experience", "every single minute of the concert", "working with dynamic group members", "the cheerful atmosphere"] },
+                    { id: "P084", part: "Feeling", pattern: "It left a positive impression + [preposition_noun]", grammar: "S + leave impression", vietnamese: "Nó để lại ấn tượng tích cực [Giới từ + Danh từ].", example: "It left a positive impression on me.", exampleVN: "Nó để lại ấn tượng tích cực cho tôi.", keywords: ["impression"], substitutes: ["on me", "on all local participants", "on the international visitors", "on my personal career outlook"] },
+                    { id: "P085", part: "Feeling", pattern: "I was deeply impressed by + [noun]", grammar: "S + be impressed by + noun", vietnamese: "Tôi rất ấn tượng bởi [Danh từ].", example: "I was deeply impressed by the organization.", exampleVN: "Tôi rất ấn tượng với công tác tổ chức.", keywords: ["impressed"], substitutes: ["the organization", "the warm friendly hosts", "the stunning light setup", "the active and polite audience"] },
+                    { id: "P086", part: "Feeling", pattern: "The experience exceeded + [noun]", grammar: "S + exceed expectations", vietnamese: "Trải nghiệm vượt ngoài [Danh từ của tôi/kỳ vọng].", example: "The experience exceeded my expectations.", exampleVN: "Trải nghiệm vượt ngoài mong đợi của tôi.", keywords: ["expectation"], substitutes: ["my expectations", "every expectation we had", "all the initial predictions", "what I initially imagined"] }
+                ]
+            }
+        };
+
+        // Default substitute keywords library map for dynamic generation
+        const defaultSubstitutesMap = {
+            "name": ["Minh", "An", "John", "Sarah", "Emily"],
+            "age": ["43", "18", "25", "30", "35"],
+            "place": ["Hanoi", "Ho Chi Minh City", "Da Nang", "a quiet suburb", "Da Lat"],
+            "job": ["an engineer", "a marketer", "a teacher", "a designer", "a developer"],
+            "noun": ["hobby", "interest", "passion", "career", "routine"],
+            "adjective": ["friendly", "optimistic", "hardworking", "reliable", "energetic"],
+            "verb": ["exercise", "study", "read books", "practice speaking", "meditate"],
+            "v-ing": ["studying", "working", "gardening", "cooking", "watching movies"],
+            "clause": ["it is quiet", "I can focus", "the weather is nice", "I feel comfortable"],
+            "material": ["wood", "metal", "plastic", "leather", "glass"],
+            "person": ["my father", "my friend", "my sister", "my family"],
+            "time": ["three years", "one month", "a decade", "five months"],
+            "event": ["a birthday party", "a charity event", "a music concert", "a seminar"]
+        };
+
+        // Active dataset loading from memory or localStorage
+        let dataset = JSON.parse(localStorage.getItem('reflex_custom_dataset')) || defaultDataset;
+
+        // Application Global States
+        let currentTopicId = "Describe_Person";
+        let activeTab = "flashcard";
+        let isKeyboardMode = false;
+        let isContinuousMic = true; 
+        let isAutoNext = true;
+
+        // Monologue Difficulty Level Settings (1: Show sentence template, 2: Hide sentence / Free speaking)
+        let monologueDifficulty = 1;
+
+        // Gamified Progress State
+        let streak = parseInt(localStorage.getItem('streak_reflex_app') || '0');
+        let xp = parseInt(localStorage.getItem('xp_reflex_app') || '0');
+        let masteredSentences = JSON.parse(localStorage.getItem('mastered_sentences') || '[]');
+
+        // Active selection indexing
+        let flashcardIndex = 0;
+        let substitutionIndex = 0;
+        let monologueStepIndex = 0;
+
+        let activeSubKeyword = "";
+        let activeSubKeywordIndex = 0; 
+        let speechHistory = {}; 
+        let autoNextTimeout = null;
+
+        // Speech Recognition API Core Engine
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let isRecording = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true; 
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+        } else {
+            console.log("Browser does not support Web Speech Recognition. Defaulting to keyboard.");
+        }
+
+        // Web Audio Synthesizer (Retro Game Audio Engine)
+        let audioCtx = null;
+        function playChimeSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'success') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.16); // G5
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                } else if (type === 'error') {
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); 
+                    osc.frequency.setValueAtTime(147, audioCtx.currentTime + 0.12); 
+                    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.45);
+                } else if (type === 'click') {
+                    osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                }
+            } catch(e) {
+                console.log("Audio blocked.");
+            }
+        }
+
+        // Lifecycle Initiation
+        window.addEventListener('load', () => {
+            initProgress();
+            renderCategoryCatalog();
+            loadTopicDataset();
+            setupWebSpeechCallbacks();
+            checkMicrophonePermissions();
+            refreshPreviewDatabaseTable(); // Populate Preview Table on Load
+            
+            if (isContinuousMic && SpeechRecognition) {
+                setTimeout(() => {
+                    startGlobalContinuousListening();
+                }, 1000);
+            }
+        });
+
+        function initProgress() {
+            document.getElementById('streakCount').innerText = streak;
+            document.getElementById('xpCount').innerText = xp;
+            document.getElementById('masteredCount').innerText = masteredSentences.length;
+        }
+
+        function checkMicrophonePermissions() {
+            if (!SpeechRecognition) {
+                const badge = document.getElementById('micStatusBadge');
+                badge.innerHTML = `<i class="fa-solid fa-keyboard"></i> <span>Chế độ gõ phím bắt buộc</span>`;
+                badge.className = "flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/20";
+                
+                document.getElementById('keyboardModeToggle').checked = true;
+                toggleKeyboardMode();
+            }
+        }
+
+        function toggleContinuousMicMode() {
+            const toggle = document.getElementById('continuousMicToggle');
+            isContinuousMic = toggle.checked;
+
+            if (recognition) {
+                recognition.stop();
+                isRecording = false;
+                updateButtonsRecordingState(false);
+            }
+
+            if (isContinuousMic) {
+                showToast("Đã bật nhận diện Micro liên tục! Trình duyệt sẽ chỉ xin quyền đúng 1 lần.");
+                startGlobalContinuousListening();
+            } else {
+                showToast("Đã chuyển về chế độ click bấm nút thủ công.");
+            }
+        }
+
+        function toggleAutoNextMode() {
+            const toggle = document.getElementById('autoNextToggle');
+            isAutoNext = toggle.checked;
+            if (!isAutoNext && autoNextTimeout) {
+                clearTimeout(autoNextTimeout);
+                document.getElementById('autoNextProgressContainer').classList.add('hidden');
+            }
+            showToast(isAutoNext ? "Đã bật tự động chuyển câu thông minh!" : "Đã tắt tự động chuyển câu.");
+        }
+
+        function startGlobalContinuousListening() {
+            if (!recognition || isKeyboardMode) return;
+            try {
+                recognition.continuous = true;
+                recognition.start();
+            } catch (e) {
+                // Ignore already running states
+            }
+        }
+
+        function toggleKeyboardMode() {
+            const toggle = document.getElementById('keyboardModeToggle');
+            isKeyboardMode = toggle.checked;
+
+            const keyboardSect1 = document.getElementById('keyboardInputSection');
+            const keyboardSect2 = document.getElementById('subKeyboardSection');
+            const keyboardSect3 = document.getElementById('monoKeyboardSection');
+
+            const btnSpeak1 = document.getElementById('btnStartSpeak');
+            const btnSpeak2 = document.getElementById('btnSubSpeak');
+            const btnSpeak3 = document.getElementById('btnMonoSpeak');
+
+            if (isKeyboardMode) {
+                keyboardSect1.classList.remove('hidden');
+                keyboardSect1.classList.add('flex');
+                keyboardSect2.classList.remove('hidden');
+                keyboardSect3.classList.remove('hidden');
+
+                if (btnSpeak1) btnSpeak1.classList.add('hidden');
+                if (btnSpeak2) btnSpeak2.classList.add('hidden');
+                if (btnSpeak3) btnSpeak3.classList.add('hidden');
+                
+                if (recognition) {
+                    recognition.stop();
+                }
+                showToast("Đã chuyển sang chế độ gõ bàn phím!");
+            } else {
+                keyboardSect1.classList.add('hidden');
+                keyboardSect1.classList.remove('flex');
+                keyboardSect2.classList.add('hidden');
+                keyboardSect3.classList.add('hidden');
+
+                if (btnSpeak1) btnSpeak1.classList.remove('hidden');
+                if (btnSpeak2) btnSpeak2.classList.remove('hidden');
+                if (btnSpeak3) btnSpeak3.classList.remove('hidden');
+
+                if (isContinuousMic) {
+                    startGlobalContinuousListening();
+                }
+                showToast("Đã kích hoạt chế độ thu âm Micro!");
+            }
+        }
+
+        function setupWebSpeechCallbacks() {
+            if (!recognition) return;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                updateButtonsRecordingState(true);
+            };
+
+            recognition.onerror = (e) => {
+                console.error("Speech Error Logged: ", e.error);
+                if (e.error !== 'no-speech') {
+                    showToast("Micro bị ngắt nhịp. Đang tự động thiết lập lại kết nối...");
+                }
+            };
+
+            recognition.onend = () => {
+                isRecording = false;
+                updateButtonsRecordingState(false);
+                if (isContinuousMic && !isKeyboardMode) {
+                    try {
+                        recognition.start();
+                    } catch(err) {}
+                }
+            };
+
+            recognition.onresult = (event) => {
+                const resultIndex = event.resultIndex;
+                const spokenText = event.results[resultIndex][0].transcript;
+                processSpeechGrade(spokenText);
+            };
+        }
+
+        function updateButtonsRecordingState(recording) {
+            const btnFlash = document.getElementById('btnStartSpeak');
+            const btnSub = document.getElementById('btnSubSpeak');
+            const btnMono = document.getElementById('btnMonoSpeak');
+            const statusBadge = document.getElementById('micStatusBadge');
+            const elements = [btnFlash, btnSub, btnMono];
+
+            if (recording) {
+                statusBadge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span> <span class="font-bold text-emerald-400">Micro đang lắng nghe liên tục...</span>`;
+                statusBadge.className = "flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20";
+            } else {
+                statusBadge.innerHTML = `<i class="fa-solid fa-microphone-slash"></i> <span>Micro đang tạm nghỉ</span>`;
+                statusBadge.className = "flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800";
+            }
+
+            elements.forEach(btn => {
+                if (!btn) return;
+                if (recording) {
+                    btn.className = "flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-md";
+                    btn.innerHTML = `<div class="wave-container"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div> <span class="text-xs">Micro Luôn Bật - Nói ngay cấu trúc mẫu</span>`;
+                } else {
+                    restoreBtnNormal(btn);
+                }
+            });
+        }
+
+        function restoreBtnNormal(btn) {
+            if (!btn) return;
+            if (btn.id === 'btnStartSpeak') {
+                btn.className = "flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-500 text-white glow-button transition-all";
+                btn.innerHTML = `<i class="fa-solid fa-microphone text-base"></i> <span>Bắt đầu luyện phản xạ</span>`;
+            } else if (btn.id === 'btnSubSpeak') {
+                btn.className = "flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 glow-button transition-all";
+                btn.innerHTML = `<i class="fa-solid fa-microphone text-slate-950"></i> <span>Bắt đầu nói thay thế</span>`;
+            } else if (btn.id === 'btnMonoSpeak') {
+                btn.className = "flex items-center gap-2.5 px-7 py-4 rounded-2xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white glow-button transition-all";
+                btn.innerHTML = `<i class="fa-solid fa-microphone text-base"></i> <span>Bắt đầu nói phân đoạn</span>`;
+            }
+        }
+
+        function renderCategoryCatalog() {
+            const container = document.getElementById('topicCategories');
+            container.innerHTML = '';
+
+            const groups = {};
+            Object.keys(dataset).forEach(key => {
+                const topic = dataset[key];
+                if (!groups[topic.category]) groups[topic.category] = [];
+                groups[topic.category].push({ id: key, ...topic });
+            });
+
+            document.getElementById('topicTotalBadge').innerText = `${Object.keys(groups).length} Nhóm lớn`;
+
+            Object.keys(groups).forEach((catName, catIdx) => {
+                let catHtml = `
+                    <div class="mb-2 border-b border-slate-800/40 pb-2">
+                        <div class="text-[10px] text-slate-500 font-extrabold tracking-wider uppercase mb-1 px-1">${catName}</div>
+                        <div class="flex flex-col gap-1.5">
+                `;
+
+                groups[catName].forEach(topic => {
+                    const isActive = topic.id === currentTopicId;
+                    const borderClass = isActive ? `border-indigo-500/40 bg-slate-800/60 text-indigo-300 font-bold shadow-inner` : `border-slate-800/20 text-slate-300 hover:bg-slate-900/60`;
+                    
+                    catHtml += `
+                        <button onclick="selectReflexTopic('${topic.id}')" class="w-full flex items-center justify-between p-3 rounded-2xl border text-xs transition-all text-left ${borderClass}">
+                            <div class="flex items-center gap-2.5 overflow-hidden">
+                                <span class="w-7 h-7 rounded-lg bg-${topic.color || 'indigo'}-500/10 text-${topic.color || 'indigo'}-400 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid ${topic.icon || 'fa-folder-open'} text-[11px]"></i>
+                                </span>
+                                <span class="truncate text-xs">${topic.name}</span>
+                            </div>
+                            ${isActive ? '<i class="fa-solid fa-circle-check text-indigo-400 shrink-0"></i>' : ''}
+                        </button>
+                    `;
+                });
+
+                catHtml += `</div></div>`;
+                container.innerHTML += catHtml;
+            });
+        }
+
+        function selectReflexTopic(topicId) {
+            playChimeSound('click');
+            currentTopicId = topicId;
+            flashcardIndex = 0;
+            substitutionIndex = 0;
+            activeSubKeywordIndex = 0; 
+            monologueStepIndex = 0;
+            resetAutoNextTimer();
+            renderCategoryCatalog();
+            loadTopicDataset();
+        }
+
+        function switchTab(tabId) {
+            playChimeSound('click');
+            activeTab = tabId;
+            resetAutoNextTimer();
+
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
+            document.getElementById(`panel-${tabId}`).classList.remove('hidden');
+
+            const tabIds = ['flashcard', 'substitution', 'monologue'];
+            tabIds.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabId) {
+                    btn.className = "w-full flex items-center gap-3.5 px-4.5 py-4 rounded-2xl text-left font-medium transition-all duration-200 bg-indigo-600 text-white shadow-lg shadow-indigo-600/20";
+                    btn.querySelector('.w-9').className = "w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0";
+                } else {
+                    btn.className = "w-full flex items-center gap-3.5 px-4.5 py-4 rounded-2xl text-left font-medium transition-all duration-200 text-slate-400 hover:bg-slate-900 hover:text-white border border-transparent hover:border-slate-800";
+                    btn.querySelector('.w-9').className = "w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center shrink-0";
+                }
+            });
+
+            loadTopicDataset();
+        }
+
+        function loadTopicDataset() {
+            const topic = dataset[currentTopicId];
+            if (!topic) return;
+
+            if (activeTab === 'flashcard') {
+                document.getElementById('flashcardTopicName').innerText = `Chủ đề: ${topic.name}`;
+                setupFlashcardView();
+            } else if (activeTab === 'substitution') {
+                document.getElementById('subCountIndicator').innerText = `MẪU ${substitutionIndex + 1}/${topic.items.length}`;
+                setupSubstitutionView();
+            } else if (activeTab === 'monologue') {
+                document.getElementById('monoTopicName').innerText = `Chủ đề: ${topic.name}`;
+                setupMonologueView();
+            }
+        }
+
+        // ==================== TAB 1: FLASHCARD MECHANICS ====================
+        function setupFlashcardView() {
+            const topic = dataset[currentTopicId];
+            if (!topic || topic.items.length === 0) return;
+            const item = topic.items[flashcardIndex];
+            if (!item) return;
+
+            document.getElementById('flashcardCountIndicator').innerText = `CÂU ${flashcardIndex + 1}/${topic.items.length}`;
+            document.getElementById('flashcardVietnamese').innerText = `"${item.vietnamese}"`;
+            document.getElementById('flashcardEnglish').innerText = item.example;
+            document.getElementById('flashcardGrammar').innerText = item.grammar || "N/A";
+            document.getElementById('flashcardKeywords').innerText = item.keywords ? item.keywords.join(', ') : "N/A";
+
+            document.getElementById('flashcardAnswerBox').classList.add('hidden');
+            document.getElementById('voiceResultBox').classList.add('hidden');
+            document.getElementById('btnShowAnswer').classList.remove('hidden');
+            document.getElementById('btnNextFlashcard').classList.add('hidden');
+            document.getElementById('keyboardAnswerField').value = '';
+
+            document.getElementById('speechTranscript').innerText = `"Sẵn sàng thu âm..."`;
+            document.getElementById('speechMatchPercent').innerText = `Khớp 0%`;
+        }
+
+        function revealFlashcardAnswer() {
+            playChimeSound('click');
+            document.getElementById('flashcardAnswerBox').classList.remove('hidden');
+            document.getElementById('btnShowAnswer').classList.add('hidden');
+            document.getElementById('btnNextFlashcard').classList.remove('hidden');
+        }
+
+        function nextFlashcard() {
+            playChimeSound('click');
+            resetAutoNextTimer();
+            const topic = dataset[currentTopicId];
+            flashcardIndex = (flashcardIndex + 1) % topic.items.length;
+            setupFlashcardView();
+        }
+
+        // ==================== TAB 2: SUBSTITUTION MECHANICS ====================
+        function setupSubstitutionView() {
+            const topic = dataset[currentTopicId];
+            if (!topic || topic.items.length === 0) return;
+            const item = topic.items[substitutionIndex];
+            if (!item) return;
+
+            document.getElementById('drillPattern').innerHTML = item.pattern.replace(/\[(.*?)\]/g, `<span class="bg-amber-500/10 text-amber-300 px-2.5 py-0.5 rounded border border-amber-500/20 font-extrabold">$1</span>`);
+            document.getElementById('drillGrammar').innerText = item.grammar || "N/A";
+
+            const chipContainer = document.getElementById('drillChips');
+            chipContainer.innerHTML = '';
+
+            if (!item.substitutes || item.substitutes.length === 0) {
+                item.substitutes = ["My context", "My example", "Something new"];
+            }
+
+            item.substitutes.forEach((sub, idx) => {
+                let activeStyle = idx === activeSubKeywordIndex ? "bg-amber-500 text-slate-950 font-black border-transparent shadow-md" : "bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800";
+                chipContainer.innerHTML += `
+                    <button onclick="selectSubstituteKeyword('${sub}', ${idx}, this)" class="px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 ${activeStyle}">
+                        ${sub}
+                    </button>
+                `;
+            });
+
+            activeSubKeyword = item.substitutes[activeSubKeywordIndex] || item.substitutes[0];
+            generateSubstitutedSentence();
+
+            document.getElementById('subVoiceResult').classList.add('hidden');
+            document.getElementById('subKeyboardAnswerField').value = '';
+            document.getElementById('subTranscript').innerText = `"Sẵn sàng thu âm..."`;
+            document.getElementById('subMatchPercent').innerText = `Khớp 0%`;
+        }
+
+        function selectSubstituteKeyword(word, index, btnElement) {
+            playChimeSound('click');
+            activeSubKeyword = word;
+            activeSubKeywordIndex = index; 
+
+            const chips = document.getElementById('drillChips').querySelectorAll('button');
+            chips.forEach(btn => {
+                btn.className = "px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800";
+            });
+
+            btnElement.className = "px-3.5 py-2 rounded-xl text-xs font-bold border transition-all duration-200 bg-amber-500 text-slate-950 font-extrabold border-transparent shadow-md shadow-amber-500/10";
+            generateSubstitutedSentence();
+        }
+
+        function applyCustomKeyword() {
+            const inputField = document.getElementById('customSubInput');
+            const val = inputField.value.trim();
+            if (!val) return;
+
+            playChimeSound('success');
+            
+            const topic = dataset[currentTopicId];
+            const item = topic.items[substitutionIndex];
+            
+            item.substitutes.splice(activeSubKeywordIndex, 0, val);
+            activeSubKeyword = val;
+
+            setupSubstitutionView();
+            inputField.value = '';
+        }
+
+        function generateSubstitutedSentence() {
+            const topic = dataset[currentTopicId];
+            const item = topic.items[substitutionIndex];
+            if (!item) return;
+
+            document.getElementById('completedSentence').innerHTML = item.pattern.replace(/\[(.*?)\]/g, `<span class="text-amber-300 border-b-2 border-dashed border-amber-400 font-black">${activeSubKeyword}</span>`);
+
+            const dict = {
+                "Minh": "Minh", "An": "An", "John": "John", "Sarah": "Sarah", "Emily": "Emily", "Alex": "Alex",
+                "43": "43", "18": "18", "25": "25", "30": "30", "35": "35",
+                "Tien Giang": "Tiền Giang", "Hanoi": "Hà Nội", "Da Nang": "Đà Nẵng", "Nha Trang": "Nha Trang", "London": "Luân Đôn",
+                "Ho Chi Minh City": "TP.HCM", "a quiet suburb": "một vùng ngoại ô yên bình", "a modern apartment": "một căn hộ hiện đại", "Da Lat": "Đà Lạt",
+                "an engineer": "kỹ sư", "a marketer": "nhân viên tiếp thị", "a teacher": "giáo viên", "a designer": "nhà thiết kế", "a developer": "lập trình viên",
+                "a lifelong learner": "một người học tập suốt đời", "a tech enthusiast": "một người đam mê công nghệ", "a travel lover": "một người yêu du lịch", "an optimistic person": "một người lạc quan",
+                "a dedicated teacher": "một giáo viên tận tâm", "a creative designer": "một nhà thiết kế sáng tạo", "a reliable friend": "một người bạn đáng tin cậy", "a hard worker": "một người chăm chỉ",
+                "tall and slim": "cao và gầy", "athletic": "khỏe khoắn/thể thao", "of medium height": "có chiều cao trung bình", "energetic and fit": "năng động và thon gọn",
+                "short black hair": "tóc đen ngắn", "long wavy hair": "tóc xoăn dài", "brown eyes": "đôi mắt nâu", "a friendly face": "một gương mặt thân thiện",
+                "casual clothes": "đồ thường ngày", "a professional suit": "một bộ vest chuyên nghiệp", "jeans and a T-shirt": "quần jeans và áo thun", "comfortable sportswear": "đồ thể thao thoải mái",
+                "smile": "nụ cười", "glasses": "mắt kính", "energetic posture": "dáng điệu tràn đầy năng lượng", "bright eyes": "đôi mắt sáng",
+                "my friendly smile": "nụ cười thân thiện của tôi", "my elegant style": "phong cách thanh lịch của tôi", "my neat appearance": "vẻ ngoài gọn gàng của tôi", "my expressive eyes": "đôi mắt biểu cảm của tôi",
+                "my curly hair": "mái tóc xoăn của tôi", "my height": "chiều cao của tôi", "my bright smile": "nụ cười rạng rỡ của tôi", "my dimples": "má lúm đồng tiền của tôi",
+                "energetic": "năng động", "neat": "gọn gàng", "simple and casual": "đơn giản và giản dị", "professional": "chuyên nghiệp",
+                "friendly": "thân thiện", "kind": "tốt bụng", "easygoing": "dễ tính", "cheerful": "vui vẻ",
+                "patient": "kiên nhẫn", "shy": "nhút nhát", "ambitious": "tham vọng", "creative": "sáng tạo",
+                "optimistic": "lạc quan", "introverted": "hướng nội", "talkative": "hoạt ngôn", "cautious": "thận trọng",
+                "hardworking": "chăm chỉ", "responsible": "có trách nhiệm", "punctual": "đúng giờ", "organized": "ngăn nắp",
+                "reliable": "đáng tin cậy", "helpful": "hay giúp đỡ", "independent": "tự lập", "funny": "hài hước",
+                "perseverance": "sự kiên trì", "adaptability": "khả năng thích nghi", "problem-solving": "giải quyết vấn đề", "creativity": "sự sáng tạo",
+                "reading books": "đọc sách", "cooking meals": "nấu ăn", "traveling": "đi du lịch", "playing football": "chơi bóng đá",
+                "drawing": "vẽ", "gardening": "làm vườn", "photography": "nhiếp ảnh", "listening to music": "nghe nhạc",
+                "learning English": "học tiếng Anh", "jogging": "chạy bộ", "cooking": "nấu ăn", "watching movies": "xem phim",
+                "watching documentaries": "xem phim tài liệu", "practicing guitar": "tập đàn guitar", "browsing the internet": "lướt mạng", "swimming": "bơi lội",
+                "coding": "lập trình", "hiking": "leo núi dã ngoại", "blogging": "viết blog",
+                "get up at 6 a.m.": "thức dậy lúc 6 giờ sáng", "have breakfast at home": "ăn sáng ở nhà", "go to bed early": "đi ngủ sớm", "read news in the morning": "đọc tin tức vào buổi sáng",
+                "go to school": "đi học", "exercise for 30 minutes": "tập thể dục 30 phút", "practice English speaking": "luyện nói tiếng Anh", "walk to the office": "đi bộ đến văn phòng",
+                "exercise after work": "tập thể dục sau giờ làm", "cook dinner for my family": "nấu bữa tối cho gia đình", "listen to podcasts": "nghe podcast", "meet up with friends": "gặp gỡ bạn bè",
+                "studying": "học tập", "working on the computer": "làm việc trên máy tính", "solving client issues": "giải quyết vấn đề của khách hàng", "attending meetings": "tham gia các cuộc họp",
+                "a cup of coffee": "một tách cà phê", "a light breakfast": "bữa sáng nhẹ nhàng", "a short walk": "đi dạo một đoạn ngắn", "some stretching exercises": "vài động tác giãn cơ",
+                "routine": "thói quen/lịch trình", "lifestyle": "lối sống", "diet": "chế độ ăn uống", "mindset": "tư duy",
+                "the city center": "trung tâm thành phố", "the northern part of Vietnam": "miền Bắc Việt Nam", "a cozy neighborhood": "một khu lân cận ấm cúng", "the quiet countryside": "vùng nông thôn yên tĩnh",
+                "the local subway station": "ga tàu điện ngầm địa phương", "a beautiful lake": "một hồ nước tuyệt đẹp", "a bustling local market": "một khu chợ địa phương nhộn nhịp",
+                "next to the park": "cạnh công viên", "opposite the supermarket": "đối diện siêu thị", "behind the ancient church": "phía sau nhà thờ cổ kính", "near the high school": "gần trường trung học",
+                "a quiet neighborhood": "một khu dân cư yên tĩnh", "a historical town": "một thị trấn lịch sử", "a valley": "một thung lũng", "the coastal region": "vùng duyên hải",
+                "downtown": "trung tâm thành phố", "any part of the city": "bất kỳ khu vực nào của thành phố", "the main highway": "tuyến đường cao tốc chính", "the airport": "sân bay",
+                "near public transport": "gần phương tiện công cộng", "in the heart of the capital": "ở giữa lòng thủ đô", "close to shopping malls": "gần các trung tâm mua sắm", "by the riverbank": "bên bờ sông",
+                "spacious": "rộng rãi", "cozy and warm": "ấm cúng và ấm áp", "extremely modern": "cực kỳ hiện đại",
+                "large windows": "những cửa sổ lớn", "a high ceiling": "trần nhà cao", "a modern interior design": "thiết kế nội thất hiện đại", "a lush green garden": "một khu vườn xanh mướt",
+                "ancient": "cổ kính", "colorful and vibrant": "rực rỡ sắc màu và sinh động", "well-maintained": "được bảo dưỡng tốt",
+                "the view": "quang cảnh", "the quietness": "sự yên tĩnh", "the friendly people": "những con người thân thiện", "the delicious food selection": "sự lựa chọn ẩm thực ngon lành",
+                "its peaceful atmosphere": "bầu không khí yên bình của nó", "the warm architecture": "kiến trúc ấm cúng", "the kind and helpful locals": "người dân địa phương tốt bụng và hay giúp đỡ", "the rich historical background": "bối cảnh lịch sử phong phú",
+                "its architecture": "kiến trúc của nó", "its signature design": "thiết kế đặc trưng của nó", "its giant ancient trees": "những cây cổ thụ khổng lồ", "its vibrant color scheme": "tông màu rực rỡ của nó",
+                "it is quiet": "nó yên tĩnh", "it helps me relax": "nó giúp tôi thư giãn", "I can study without distraction": "tôi có thể học tập mà không bị xao nhãng", "the prices are affordable": "giá cả phải chăng",
+                "it feels comfortable": "nó tạo cảm giác thoải mái", "it offers stunning views": "nó mang lại tầm nhìn tuyệt đẹp", "I can focus on my creative work": "tôi có thể tập trung vào công việc sáng tạo của mình", "it brings back childhood memories": "nó gợi lại những kỷ niệm thời thơ ấu",
+                "it is convenient": "nó thuận tiện", "the atmosphere is refreshing": "bầu không khí thật trong lành", "it is highly accessible": "nó rất dễ tiếp cận", "I can meet like-minded people": "tôi có thể gặp gỡ những người có cùng chí hướng",
+                "of the atmosphere": "vì bầu không khí", "it belongs to my close friend": "nó thuộc về một người bạn thân của tôi", "I can take beautiful photographs": "tôi có thể chụp được những bức ảnh đẹp", "it inspires me every time I visit": "nó truyền cảm hứng cho tôi mỗi lần ghé thăm",
+                "memories": "những kỷ niệm", "stories": "những câu chuyện", "feelings": "những cảm xúc", "lessons": "những bài học",
+                "place": "nơi này", "neighborhood": "khu phố này", "city": "thành phố này", "house": "ngôi nhà này",
+                "bicycle": "chiếc xe đạp", "laptop": "chiếc máy tính xách tay", "mechanical watch": "chiếc đồng hồ cơ", "leather wallet": "chiếc ví da", "smart phone": "chiếc điện thoại thông minh",
+                "three years": "3 năm", "one month": "1 tháng", "over a decade": "hơn 1 thập kỷ", "a long time": "một khoảng thời gian dài", "five months": "5 tháng",
+                "my father": "bố tôi", "my older sister": "chị gái tôi", "me and my roommate": "tôi và bạn cùng phòng", "my family": "gia đình tôi",
+                "my friend": "bạn tôi", "my parents on my birthday": "bố mẹ tôi vào ngày sinh nhật", "my university professor": "giáo sư đại học của tôi", "my beloved boss": "sếp kính yêu của tôi",
+                "life": "cuộc sống", "career": "sự nghiệp", "journey": "hành trình",
+                "connection": "sự kết nối", "bond": "sợi dây tình cảm", "feeling": "cảm xúc",
+                "highly durable": "rất bền", "sleek and portable": "thon gọn và dễ mang đi", "extremely robust": "cực kỳ chắc chắn",
+                "wood": "gỗ", "premium aluminum": "nhôm cao cấp", "durable plastic": "nhựa bền", "genuine leather": "da thật", "stainless steel": "thép không gỉ",
+                "a modern design": "một thiết kế hiện đại", "a sleek black finish": "lớp sơn đen bóng bẩy", "multiple key buttons": "nhiều nút bấm phím", "a high-resolution display": "một màn hình độ phân giải cao",
+                "matte black": "đen nhám", "pearl white": "trắng ngọc trai", "metallic silver": "bạc ánh kim",
+                "its high-speed performance": "hiệu suất tốc độ cao của nó", "its compact size": "kích thước nhỏ gọn của nó", "its ergonomic structure": "cấu trúc công thái học của nó",
+                "texture": "kết cấu", "style": "phong cách", "feel": "cảm giác cầm nắm",
+                "every day": "mỗi ngày", "for work": "cho công việc", "every weekend": "mỗi cuối tuần", "when traveling": "khi đi du lịch",
+                "stay in touch with relatives": "giữ liên lạc với người thân", "capture high-quality memories": "ghi lại những kỷ niệm chất lượng cao",
+                "studying English": "học tiếng Anh", "entertainment purpose": "mục đích giải trí", "navigating around city": "định vị đường đi quanh thành phố",
+                "my career progress": "tiến trình sự nghiệp của tôi", "my daily commute": "việc đi lại hàng ngày của tôi", "my creative workflow": "quy trình sáng tạo của tôi",
+                "I have tight deadlines": "tôi có hạn chót gấp rút", "I need to look up information": "tôi cần tra cứu thông tin", "I work remotely": "tôi làm việc từ xa",
+                "workdays": "những ngày làm việc", "daily studies": "việc học tập hàng ngày",
+                "a birthday party": "một bữa tiệc sinh nhật", "a charity local event": "một sự kiện từ thiện địa phương", "a major music concert": "một buổi hòa nhạc lớn", "a high school graduation ceremony": "lễ tốt nghiệp trung học phổ thông", "a technology seminar": "một buổi hội thảo công nghệ",
+                "last weekend": "cuối tuần trước", "in the city center square": "ở quảng trường trung tâm thành phố", "two months ago": "2 tháng trước", "at my high school campus": "tại khuôn viên trường cấp 3 của tôi",
+                "a sports team competition": "cuộc thi đấu đội nhóm thể thao", "the project organizing committee": "ban tổ chức dự án", "a high-profile local workshop": "một buổi hội thảo địa phương tầm cỡ",
+                "a local non-profit community": "một cộng đồng phi lợi nhuận địa phương", "a multinational tech company": "một công ty công nghệ đa quốc gia", "my closest childhood friend": "người bạn thời thơ ấu thân nhất của tôi",
+                "highly inspiring": "vô cùng truyền cảm hứng", "a bit chaotic": "hơi hỗn loạn một chút", "extremely informative": "cực kỳ nhiều thông tin bổ ích", "wildly successful": "thành công rực rỡ",
+                "from my high school years": "từ những năm học cấp 3 của tôi", "in my entire engineering career": "trong toàn bộ sự nghiệp kỹ sư của tôi", "of my youth": "của thời tuổi trẻ của tôi",
+                "played games": "chơi các trò chơi", "sang joyful songs": "hát những bài hát vui tươi", "discussed future projects": "thảo luận về các dự án tương lai", "shared delicious meals": "chia sẻ những bữa ăn ngon lành", "took beautiful photos": "chụp những bức ảnh đẹp",
+                "engaging game segments": "các phần chơi game lôi cuốn", "talented guest speakers": "các diễn giả khách mời tài năng", "interactive photo booths": "các quầy chụp ảnh tương tác",
+                "meet new people": "gặp gỡ những người bạn mới", "win valuable prizes": "giành được những phần quà giá trị", "ask deep industry questions": "đặt các câu hỏi chuyên sâu cho ngành", "try diverse street food": "thử các món ăn đường phố đa dạng",
+                "the music show": "chương trình âm nhạc", "the interactive group quiz": "phần đố vui tương tác nhóm", "the keynote address by the CEO": "bài phát biểu chính từ CEO", "the surprise prize draw": "phần bốc thăm trúng thưởng bất ngờ",
+                "discussions": "những cuộc thảo luận", "the practical team activities": "các hoạt động thực hành đội nhóm", "cheering for the candidates": "cổ vũ cho các thí sinh", "playing physical sports games": "chơi các môn thể thao vận động",
+                "practical training workshops": "các buổi thực hành đào tạo thực tế", "local cultural food dishes": "các món ăn văn hóa địa phương", "networking sessions": "các phiên kết nối giao lưu",
+                "absolutely thrilled": "cực kỳ phấn khích", "deeply relieved": "vô cùng nhẹ nhõm", "extremely satisfied": "vô cùng hài lòng",
+                "the event": "sự kiện đó", "the wonderful learning outcome": "kết quả học tập tuyệt vời", "the connection I made with experts": "các mối quan hệ tôi tạo dựng được với chuyên gia", "the upcoming plans": "những kế hoạch sắp tới",
+                "every single minute of the concert": "từng phút giây của buổi hòa nhạc", "working with dynamic group members": "làm việc cùng các thành viên nhóm năng động", "the cheerful atmosphere": "bầu không khí hân hoan",
+                "on me": "đối với tôi", "on all local participants": "đối với tất cả người tham gia địa phương", "on the international visitors": "đối với những du khách quốc tế", "on my personal career outlook": "đối với viễn cảnh sự nghiệp cá nhân của tôi",
+                "the organization": "công tác tổ chức", "the warm friendly hosts": "những người chủ trì nồng hậu và thân thiện", "the stunning light setup": "bối cảnh ánh sáng lộng lẫy", "the active and polite audience": "khán giả năng nổ và lịch thiệp",
+                "my expectations": "kỳ vọng của tôi", "every expectation we had": "mọi kỳ vọng chúng tôi đã có", "all the initial predictions": "tất cả những dự đoán ban đầu", "what I initially imagined": "những gì ban đầu tôi tưởng tượng"
+            };
+
+            let mappedVi = dict[activeSubKeyword] || activeSubKeyword;
+            let rawVn = item.vietnamese || "";
+            let generatedVN = rawVn.replace(/\[(.*?)\]/g, mappedVi);
+            
+            document.getElementById('completedSentenceTranslation').innerText = `"${generatedVN}"`;
+        }
+
+        // KEYWORD-FIRST LOOP MECHANICS (TAB 2)
+        function nextSubDrill() {
+            playChimeSound('click');
+            resetAutoNextTimer();
+            const topic = dataset[currentTopicId];
+            if (!topic || topic.items.length === 0) return;
+            const item = topic.items[substitutionIndex];
+
+            if (item && activeSubKeywordIndex < item.substitutes.length - 1) {
+                activeSubKeywordIndex++;
+                activeSubKeyword = item.substitutes[activeSubKeywordIndex];
+
+                const chips = document.getElementById('drillChips').querySelectorAll('button');
+                chips.forEach((btn, idx) => {
+                    if (idx === activeSubKeywordIndex) {
+                        btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold border transition-all duration-200 bg-amber-500 text-slate-950 font-extrabold border-transparent shadow-md shadow-amber-500/10";
+                    } else {
+                        btn.className = "px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800";
+                    }
+                });
+
+                generateSubstitutedSentence();
+
+                document.getElementById('subVoiceResult').classList.add('hidden');
+                document.getElementById('subKeyboardAnswerField').value = '';
+                document.getElementById('subTranscript').innerText = `"Sẵn sàng thu âm..."`;
+                document.getElementById('subMatchPercent').innerText = `Khớp 0%`;
+            } else {
+                activeSubKeywordIndex = 0;
+                substitutionIndex = (substitutionIndex + 1) % topic.items.length;
+                setupSubstitutionView();
+            }
+        }
+
+        // ==================== TAB 3: MONOLOGUE DIFFICULTY SELECTOR ====================
+        function setMonoDifficulty(level) {
+            playChimeSound('click');
+            monologueDifficulty = level;
+
+            const btn1 = document.getElementById('btnMonoDiff1');
+            const btn2 = document.getElementById('btnMonoDiff2');
+
+            if (level === 1) {
+                btn1.className = "px-3.5 py-1.5 rounded-xl text-[10px] font-black transition-all bg-emerald-600 text-white shadow-md";
+                btn2.className = "px-3.5 py-1.5 rounded-xl text-[10px] font-black transition-all text-slate-400 hover:text-slate-200";
+                showToast("Đã chuyển sang Cấp độ 1: Gợi ý mẫu câu!");
+            } else {
+                btn1.className = "px-3.5 py-1.5 rounded-xl text-[10px] font-black transition-all text-slate-400 hover:text-slate-200";
+                btn2.className = "px-3.5 py-1.5 rounded-xl text-[10px] font-black transition-all bg-amber-500 text-slate-950 font-extrabold shadow-md shadow-amber-500/15";
+                showToast("Đã chuyển sang Cấp độ 2: Chỉ hiện Từ khóa & Nghĩa Việt! Nói tự do.");
+            }
+
+            setupMonologueView();
+        }
+
+        // ==================== TAB 3: MONOLOGUE MECHANICS ====================
+        function setupMonologueView() {
+            const topic = dataset[currentTopicId];
+            if (!topic || topic.items.length === 0) return;
+            const item = topic.items[monologueStepIndex];
+            if (!item) return;
+
+            const bar = document.getElementById('monoStepsBar');
+            bar.innerHTML = '';
+
+            topic.items.forEach((step, idx) => {
+                let stepStyle = "bg-slate-900 text-slate-400 border-slate-800/80 shadow-md";
+                if (idx === monologueStepIndex) {
+                    stepStyle = "bg-emerald-600 text-white font-extrabold border-emerald-500 shadow-lg shadow-emerald-500/10";
+                } else if (idx < monologueStepIndex) {
+                    stepStyle = "bg-slate-800 text-emerald-400 border-emerald-500/30";
+                }
+
+                bar.innerHTML += `
+                    <button onclick="jumpToMonoStep(${idx})" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shrink-0 ${stepStyle}">
+                        <span>${idx + 1}. ${step.part}</span>
+                        ${idx < monologueStepIndex ? '<i class="fa-solid fa-circle-check text-[10px]"></i>' : ''}
+                    </button>
+                `;
+            });
+
+            document.getElementById('monoStepPart').innerText = `Phân đoạn ${monologueStepIndex + 1}: ${item.part}`;
+            document.getElementById('monoStepVN').innerText = item.vietnamese;
+            document.getElementById('monoStepPattern').innerText = item.pattern;
+
+            const rightLabel = document.getElementById('monoRightLabel');
+            const btnAudioExample = document.getElementById('btnSpeakMonoExample');
+            const formulaBlock = document.getElementById('monoFormulaBlock');
+
+            if (monologueDifficulty === 1) {
+                // LEVEL 1: FULL PATTERN HINT
+                formulaBlock.classList.remove('hidden');
+                rightLabel.innerText = "Mẫu câu nói chuẩn tham khảo";
+                btnAudioExample.classList.remove('hidden');
+                document.getElementById('monoStepMainDisplay').innerHTML = `
+                    <p id="monoStepExample" class="text-base font-extrabold text-white leading-relaxed">"${item.example}"</p>
+                    <p id="monoStepExampleVN" class="text-xs text-slate-400 italic">"${item.exampleVN || ''}"</p>
+                `;
+            } else {
+                // LEVEL 2: KEYWORDS & VIETNAMESE MEANING ONLY (NO ENGLISH TEMPLATE DISPLAYED - nói tự do)
+                formulaBlock.classList.add('hidden'); // Hide "Cú pháp cấu trúc khuyên dùng"
+                rightLabel.innerText = "Hãy phản xạ nói dịch câu Tiếng Anh tự do:";
+                btnAudioExample.classList.add('hidden'); // Hide speak example audio icon to enforce memory recall
+                
+                let kwBadges = item.keywords ? item.keywords.map(kw => `<span class="bg-amber-400/10 text-amber-400 border border-amber-400/20 px-3 py-1 rounded-xl text-xs font-black select-all">${kw}</span>`).join(' ') : "Không có";
+                
+                document.getElementById('monoStepMainDisplay').innerHTML = `
+                    <div class="flex flex-col gap-2.5 mt-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-slate-500 font-extrabold tracking-wider uppercase">Từ khóa gợi ý:</span>
+                            <div class="flex flex-wrap gap-1.5">${kwBadges}</div>
+                        </div>
+                        <div class="border-t border-slate-900/60 pt-2 flex flex-col gap-1">
+                            <span class="text-[10px] text-indigo-400 font-extrabold tracking-wider uppercase">Ý nghĩa Tiếng Việt:</span>
+                            <p class="text-sm font-extrabold text-indigo-300">"${item.exampleVN || 'N/A'}"</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('monoKeyboardField').value = '';
+            const historicalRecord = speechHistory[item.id] || "";
+            if (historicalRecord) {
+                document.getElementById('monoStepTranscript').innerText = `"${historicalRecord}"`;
+                document.getElementById('monoStepScore').innerText = `Trạng thái: Đã luyện nói`;
+            } else {
+                document.getElementById('monoStepTranscript').innerText = `"Sẵn sàng thu âm..."`;
+                document.getElementById('monoStepScore').innerText = `Khớp: 0%`;
+            }
+
+            renderFullMonologueSummary();
+        }
+
+        function jumpToMonoStep(idx) {
+            playChimeSound('click');
+            resetAutoNextTimer();
+            monologueStepIndex = idx;
+            setupMonologueView();
+        }
+
+        function prevMonoStep() {
+            if (monologueStepIndex > 0) {
+                playChimeSound('click');
+                resetAutoNextTimer();
+                monologueStepIndex--;
+                setupMonologueView();
+            }
+        }
+
+        function nextMonoStep() {
+            const topic = dataset[currentTopicId];
+            resetAutoNextTimer();
+            if (monologueStepIndex < topic.items.length - 1) {
+                playChimeSound('click');
+                monologueStepIndex++;
+                setupMonologueView();
+            } else {
+                playChimeSound('success');
+                showToast("Chúc mừng! Bạn đã hoàn thành toàn bộ chuỗi phản xạ của bài nói!");
+                saveCompletedSentence("MONO_" + currentTopicId);
+                updateXPAndStreakPoints(40, 1);
+                renderFullMonologueSummary(true);
+            }
+        }
+
+        function renderFullMonologueSummary(forceScrollShow = false) {
+            const reportBox = document.getElementById('monologueReportBox');
+            const summaryTextContainer = document.getElementById('fullSpeechTranscripts');
+            const topic = dataset[currentTopicId];
+
+            let flowText = [];
+            let hasSpokenAnything = false;
+
+            topic.items.forEach((item, index) => {
+                const recorded = speechHistory[item.id];
+                if (recorded) {
+                    hasSpokenAnything = true;
+                    flowText.push(`<span class="text-white hover:text-emerald-400 cursor-pointer font-semibold transition-all mr-1" onclick="executeSpeakTTS('${recorded}')">${recorded}</span>`);
+                } else {
+                    flowText.push(`<span class="text-slate-600 line-through italic text-xs mr-1">[Bước ${index + 1} chưa nói: ${item.example}]</span>`);
+                }
+            });
+
+            summaryTextContainer.innerHTML = flowText.join(" ");
+
+            if (forceScrollShow || hasSpokenAnything) {
+                reportBox.classList.remove('hidden');
+                if (forceScrollShow) {
+                    reportBox.scrollIntoView({ behavior: 'smooth' });
+                }
+            } else {
+                reportBox.classList.add('hidden');
+            }
+        }
+
+        function playFullMonologue() {
+            const topic = dataset[currentTopicId];
+            let compilation = [];
+            topic.items.forEach(item => {
+                compilation.push(speechHistory[item.id] || item.example);
+            });
+            executeSpeakTTS(compilation.join(". "));
+        }
+
+        // ==================== AUTO NEXT TIMER CONTROLLER ====================
+        function triggerAutoNextTransition() {
+            if (!isAutoNext) return;
+
+            const progressContainer = document.getElementById('autoNextProgressContainer');
+            const progressBar = document.getElementById('autoNextProgressBar');
+
+            progressContainer.classList.remove('hidden');
+            progressBar.style.width = '0%';
+
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 50);
+
+            if (autoNextTimeout) clearTimeout(autoNextTimeout);
+            autoNextTimeout = setTimeout(() => {
+                progressContainer.classList.add('hidden');
+                progressBar.style.width = '0%';
+                
+                if (activeTab === 'flashcard') {
+                    nextFlashcard();
+                } else if (activeTab === 'substitution') {
+                    nextSubDrill();
+                } else if (activeTab === 'monologue') {
+                    nextMonoStep();
+                }
+            }, 1500); 
+        }
+
+        function resetAutoNextTimer() {
+            if (autoNextTimeout) clearTimeout(autoNextTimeout);
+            document.getElementById('autoNextProgressContainer').classList.add('hidden');
+            document.getElementById('autoNextProgressBar').style.width = '0%';
+        }
+
+        // ==================== KEYBOARD FALLBACK EVALUATORS ====================
+        function checkKeyboardAnswer() {
+            const inputField = document.getElementById('keyboardAnswerField');
+            const typedVal = inputField.value.trim();
+            if (!typedVal) return;
+
+            const targetVal = dataset[currentTopicId].items[flashcardIndex].example;
+            processEvaluationFlow(typedVal, targetVal);
+        }
+
+        function checkSubKeyboardAnswer() {
+            const inputField = document.getElementById('subKeyboardAnswerField');
+            const typedVal = inputField.value.trim();
+            if (!typedVal) return;
+
+            const targetVal = dataset[currentTopicId].items[substitutionIndex].pattern.replace(/\[(.*?)\]/g, activeSubKeyword);
+            processEvaluationFlow(typedVal, targetVal);
+        }
+
+        function checkMonoKeyboardAnswer() {
+            const inputField = document.getElementById('monoKeyboardField');
+            const typedVal = inputField.value.trim();
+            if (!typedVal) return;
+
+            const targetVal = dataset[currentTopicId].items[monologueStepIndex].example;
+            processEvaluationFlow(typedVal, targetVal);
+        }
+
+        // ==================== SPEECH EVALUATION FLOW ====================
+        function toggleSpeechRecognition() {
+            if (!recognition) {
+                showToast("Gặp lỗi: Nhận diện giọng nói không hỗ trợ trình duyệt này. Hãy dùng bàn phím!");
+                return;
+            }
+            if (isRecording) {
+                recognition.stop();
+                isRecording = false;
+                updateButtonsRecordingState(false);
+            } else {
+                try {
+                    recognition.continuous = isContinuousMic; 
+                    recognition.start();
+                } catch(err) {
+                    recognition.stop();
+                    isRecording = false;
+                    updateButtonsRecordingState(false);
+                }
+            }
+        }
+
+        function processSpeechGrade(spokenText) {
+            let targetText = "";
+
+            if (activeTab === 'flashcard') {
+                targetText = dataset[currentTopicId].items[flashcardIndex].example;
+            } else if (activeTab === 'substitution') {
+                targetText = dataset[currentTopicId].items[substitutionIndex].pattern.replace(/\[(.*?)\]/g, activeSubKeyword);
+            } else if (activeTab === 'monologue') {
+                targetText = dataset[currentTopicId].items[monologueStepIndex].example;
+            }
+
+            processEvaluationFlow(spokenText, targetText);
+        }
+
+        function processEvaluationFlow(spokenText, targetText) {
+            spokenText = spokenText.trim();
+            let similarity = computeSentenceSimilarity(spokenText, targetText);
+
+            if (activeTab === 'flashcard') {
+                document.getElementById('voiceResultBox').classList.remove('hidden');
+                document.getElementById('speechTranscript').innerText = `"${spokenText}"`;
+                
+                const scoreBadge = document.getElementById('speechMatchPercent');
+                scoreBadge.innerText = `Khớp ${similarity}%`;
+
+                if (similarity >= 65) {
+                    playChimeSound('success');
+                    scoreBadge.className = "font-bold px-3 py-1 rounded-xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm";
+                    updateXPAndStreakPoints(15, 1);
+                    saveCompletedSentence(dataset[currentTopicId].items[flashcardIndex].id);
+                    revealFlashcardAnswer();
+                    triggerAutoNextTransition();
+                } else {
+                    playChimeSound('error');
+                    scoreBadge.className = "font-bold px-3 py-1 rounded-xl text-rose-400 bg-rose-500/10 border border-rose-500/20 shadow-sm";
+                }
+
+            } else if (activeTab === 'substitution') {
+                document.getElementById('subVoiceResult').classList.remove('hidden');
+                document.getElementById('subTranscript').innerText = `"${spokenText}"`;
+
+                const scoreBadge = document.getElementById('subMatchPercent');
+                scoreBadge.innerText = `Khớp ${similarity}%`;
+
+                if (similarity >= 65) {
+                    playChimeSound('success');
+                    scoreBadge.className = "font-bold px-3 py-1 rounded-xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm";
+                    updateXPAndStreakPoints(15, 1);
+                    saveCompletedSentence(dataset[currentTopicId].items[substitutionIndex].id + "_" + activeSubKeyword);
+                    triggerAutoNextTransition();
+                } else {
+                    playChimeSound('error');
+                    scoreBadge.className = "font-bold px-3 py-1 rounded-xl text-rose-400 bg-rose-500/10 border border-rose-500/20 shadow-sm";
+                }
+
+            } else if (activeTab === 'monologue') {
+                const item = dataset[currentTopicId].items[monologueStepIndex];
+                speechHistory[item.id] = spokenText;
+                
+                document.getElementById('monoStepTranscript').innerText = `"${spokenText}"`;
+                const scoreBadge = document.getElementById('monoStepScore');
+
+                // GRADING SCHEME - BOTH LEVEL 1 AND LEVEL 2 NOW GRADED ON SIMILARITY RATHER THAN KEYWORDS
+                // "tính điểm khi chuyển câu mới giống cấp độ 1, nói tự do không bắt buộc chứa từ khóa"
+                scoreBadge.innerText = `Khớp: ${similarity}%`;
+
+                if (similarity >= 55) {
+                    playChimeSound('success');
+                    scoreBadge.className = "font-bold px-2.5 py-0.5 rounded text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 font-mono";
+                    updateXPAndStreakPoints(20, 1);
+                    triggerAutoNextTransition();
+                } else {
+                    playChimeSound('click');
+                    scoreBadge.className = "font-bold px-2.5 py-0.5 rounded text-amber-400 bg-amber-500/10 border border-amber-500/20 font-mono";
+                }
+
+                renderFullMonologueSummary();
+            }
+        }
+
+        function computeSentenceSimilarity(s1, s2) {
+            const cleanWords = (text) => text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").replace(/\s+/g," ").trim().split(" ");
+            const arr1 = cleanWords(s1);
+            const arr2 = cleanWords(s2);
+
+            if (arr1.length === 0 || arr2.length === 0) return 0;
+
+            let matches = 0;
+            const targetSet = new Set(arr2);
+            arr1.forEach(word => {
+                if (targetSet.has(word)) {
+                    matches++;
+                }
+            });
+
+            let ratio = (matches / Math.max(arr1.length, arr2.length)) * 100;
+            return Math.min(100, Math.round(ratio));
+        }
+
+        // ==================== TTS TEXT-TO-SPEECH ====================
+        function speakTargetText() {
+            const topic = dataset[currentTopicId];
+            const item = topic.items[flashcardIndex];
+            if (item) executeSpeakTTS(item.example);
+        }
+
+        function speakCompletedSentence() {
+            const topic = dataset[currentTopicId];
+            const item = topic.items[substitutionIndex];
+            if (item) {
+                const text = item.pattern.replace(/\[(.*?)\]/g, activeSubKeyword);
+                executeSpeakTTS(text);
+            }
+        }
+
+        function speakMonoExample() {
+            if (monologueDifficulty === 2) return;
+            const topic = dataset[currentTopicId];
+            const item = topic.items[monologueStepIndex];
+            if (item) executeSpeakTTS(item.example);
+        }
+
+        function executeSpeakTTS(text) {
+            if ('speechSynthesis' in window) {
+                const micWasActive = isRecording;
+                if (micWasActive && recognition) {
+                    recognition.stop();
+                }
+
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-US';
+                u.rate = 0.85; 
+
+                u.onend = () => {
+                    if (micWasActive && isContinuousMic && !isKeyboardMode) {
+                        try {
+                            recognition.start();
+                        } catch(e) {}
+                    }
+                };
+
+                window.speechSynthesis.speak(u);
+            } else {
+                showToast("Trình duyệt không hỗ trợ phát âm Audio.");
+            }
+        }
+
+        // ==================== DATABASE IMPORT UTILITIES ====================
+        
+        function convertPatternToBrackets(patternText) {
+            if (!patternText) return "";
+            let res = patternText;
+            const regex = /\+\s*(N|noun|job|place|age|adjective|V|verb|V-ing|Clause|clause|material|person|time|adjective_noun|preposition|preposition_noun|verb_past)/gi;
+            res = res.replace(regex, (match) => {
+                let word = match.replace('+', '').trim();
+                return `[${word}]`;
+            });
+            return res;
+        }
+
+        function getAutoSubstitutes(patternText) {
+            const regex = /\[(.*?)\]/g;
+            let matches = [];
+            let match;
+            while ((match = regex.exec(patternText)) !== null) {
+                matches.push(match[1].toLowerCase());
+            }
+
+            if (matches.length > 0 && defaultSubstitutesMap[matches[0]]) {
+                return [...defaultSubstitutesMap[matches[0]]];
+            }
+            return ["My customized context", "Another choice", "Free expression"];
+        }
+
+        function parseCSV(text) {
+            let lines = text.split(/\r\n|\n/);
+            let result = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (!line) continue;
+                
+                let arr = [];
+                let inQuotes = false;
+                let current = '';
+                
+                let separator = ',';
+                if (i === 0) {
+                    if (line.includes('\t')) separator = '\t';
+                    else if (line.includes(';')) separator = ';';
+                }
+
+                for (let j = 0; j < line.length; j++) {
+                    let char = line[j];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === separator && !inQuotes) {
+                        arr.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                arr.push(current.trim());
+                result.push(arr);
+            }
+            return result;
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileContent = e.target.result;
+                if (file.name.endsWith('.json')) {
+                    importJSONData(fileContent);
+                } else {
+                    document.getElementById('csvImportArea').value = fileContent;
+                    processTextImport();
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function importJSONData(jsonText) {
+            try {
+                const parsed = JSON.parse(jsonText);
+                let keys = Object.keys(parsed);
+                if (keys.length > 0 && parsed[keys[0]].category && parsed[keys[0]].items) {
+                    dataset = parsed;
+                    localStorage.setItem('reflex_custom_dataset', JSON.stringify(dataset));
+                    showToast("Đã nhập thành công CSDL từ tệp JSON!");
+                    selectReflexTopic(keys[0]);
+                    refreshPreviewDatabaseTable();
+                } else {
+                    showToast("Tệp JSON không đúng cấu trúc ứng dụng.");
+                }
+            } catch (err) {
+                showToast("Lỗi phân tích cú pháp tệp JSON.");
+            }
+        }
+
+        function processTextImport() {
+            const rawText = document.getElementById('csvImportArea').value.trim();
+            if (!rawText) {
+                showToast("Vui lòng dán văn bản CSV hoặc chọn tệp Excel CSV/JSON.");
+                return;
+            }
+
+            try {
+                const rows = parseCSV(rawText);
+                if (rows.length < 2) {
+                    showToast("Dữ liệu CSV quá ngắn hoặc không hợp lệ.");
+                    return;
+                }
+
+                const headers = rows[0].map(h => h.toLowerCase().replace(/[\s_]/g, ''));
+                
+                const colIdx = {
+                    id: headers.indexOf("sentenceid"),
+                    topic: headers.indexOf("patterntopictype"),
+                    part: headers.indexOf("outlinepartname"),
+                    pattern: headers.indexOf("mẫucâu") !== -1 ? headers.indexOf("mẫucâu") : headers.indexOf("pattern"),
+                    grammar: headers.indexOf("grammarstructure"),
+                    keywords: headers.indexOf("keywords"),
+                    example: headers.indexOf("example"),
+                    exampleVN: headers.indexOf("dịchexample") !== -1 ? headers.indexOf("dịchexample") : headers.indexOf("translation")
+                };
+
+                if (colIdx.topic === -1 || colIdx.example === -1) {
+                    showToast("Không tìm thấy các tiêu đề cột bắt buộc (Pattern_TopicType, Example).");
+                    return;
+                }
+
+                let newDataset = {};
+                let count = 0;
+
+                const defaultIcons = ["fa-graduation-cap", "fa-earth-americas", "fa-shapes", "fa-comments", "fa-lightbulb", "fa-rocket"];
+                const defaultColors = ["indigo", "sky", "purple", "emerald", "rose", "amber", "teal", "violet"];
+
+                for (let i = 1; i < rows.length; i++) {
+                    let row = rows[i];
+                    if (row.length < 3) continue;
+
+                    let topicKey = row[colIdx.topic] || "General_Practice";
+                    let part = colIdx.part !== -1 ? (row[colIdx.part] || "General") : "General";
+                    let rawPattern = colIdx.pattern !== -1 ? (row[colIdx.pattern] || "") : "";
+                    let grammar = colIdx.grammar !== -1 ? (row[colIdx.grammar] || "") : "";
+                    let keywordsRaw = colIdx.keywords !== -1 ? (row[colIdx.keywords] || "") : "";
+                    let example = row[colIdx.example] || "";
+                    let exampleVN = colIdx.exampleVN !== -1 ? (row[colIdx.exampleVN] || "") : "";
+                    let sentenceId = colIdx.id !== -1 ? (row[colIdx.id] || ("P" + Math.random().toString().slice(2, 6))) : ("P" + Math.random().toString().slice(2, 6));
+
+                    let keywords = keywordsRaw ? keywordsRaw.split(/[,;|]/).map(k => k.trim()).filter(Boolean) : [];
+                    if (keywords.length === 0 && rawPattern) {
+                        let match;
+                        let rx = /\[(.*?)\]/g;
+                        while ((match = rx.exec(rawPattern)) !== null) {
+                            keywords.push(match[1]);
+                        }
+                    }
+
+                    let cleanPattern = convertPatternToBrackets(rawPattern);
+                    let substitutes = getAutoSubstitutes(cleanPattern);
+
+                    if (!newDataset[topicKey]) {
+                        let formattedName = topicKey.replace(/_/g, ' ');
+                        let cat = "Chủ đề tự nhập";
+                        if (topicKey.toLowerCase().includes("person") || topicKey.toLowerCase().includes("self")) cat = "Mô tả người & Bản thân";
+                        else if (topicKey.toLowerCase().includes("place") || topicKey.toLowerCase().includes("location")) cat = "Mô tả địa điểm";
+                        else if (topicKey.toLowerCase().includes("object") || topicKey.toLowerCase().includes("thing")) cat = "Mô tả đồ vật";
+                        else if (topicKey.toLowerCase().includes("event") || topicKey.toLowerCase().includes("story") || topicKey.toLowerCase().includes("narrate")) cat = "Mô tả sự kiện";
+
+                        let randomIcon = defaultIcons[Math.floor(Math.random() * defaultIcons.length)];
+                        let randomColor = defaultColors[Math.floor(Math.random() * defaultColors.length)];
+
+                        newDataset[topicKey] = {
+                            category: cat,
+                            name: formattedName,
+                            icon: randomIcon,
+                            color: randomColor,
+                            items: []
+                        };
+                    }
+
+                    newDataset[topicKey].items.push({
+                        id: sentenceId,
+                        part: part,
+                        pattern: cleanPattern,
+                        grammar: grammar,
+                        vietnamese: exampleVN,
+                        example: example,
+                        exampleVN: exampleVN,
+                        keywords: keywords,
+                        substitutes: substitutes
+                    });
+
+                    count++;
+                }
+
+                if (count > 0) {
+                    dataset = newDataset;
+                    localStorage.setItem('reflex_custom_dataset', JSON.stringify(dataset));
+                    
+                    showToast(`Nhập dữ liệu thành công! Đã nạp ${count} mẫu câu mới.`);
+                    document.getElementById('csvImportArea').value = "";
+                    
+                    let firstTopicId = Object.keys(dataset)[0];
+                    selectReflexTopic(firstTopicId);
+                    refreshPreviewDatabaseTable();
+                } else {
+                    showToast("Không tìm thấy dòng dữ liệu nào hợp lệ.");
+                }
+
+            } catch (err) {
+                console.error(err);
+                showToast("Đã có lỗi xảy ra khi phân tích văn bản CSV. Vui lòng kiểm tra lại cấu trúc.");
+            }
+        }
+
+        function restoreOriginalDataset() {
+            if (confirm("Hành động này sẽ xóa dữ liệu nhập tùy chỉnh của bạn và khôi phục 86 mẫu câu mặc định. Bạn có muốn tiếp tục?")) {
+                localStorage.removeItem('reflex_custom_dataset');
+                dataset = defaultDataset;
+                showToast("Đã khôi phục dữ liệu 86 mẫu câu mặc định!");
+                selectReflexTopic("Describe_Person");
+                refreshPreviewDatabaseTable();
+            }
+        }
+
+        // ==================== FEATURE: PREVIEW DATABASE RENDERER ====================
+        function refreshPreviewDatabaseTable() {
+            const tableBody = document.getElementById('previewDatabaseBody');
+            tableBody.innerHTML = '';
+            
+            let allItems = [];
+            
+            Object.keys(dataset).forEach(topicKey => {
+                const topic = dataset[topicKey];
+                topic.items.forEach(item => {
+                    allItems.push({
+                        topicName: topic.name,
+                        category: topic.category,
+                        ...item
+                    });
+                });
+            });
+
+            document.getElementById('previewDatabaseCounter').innerText = `${allItems.length} Mẫu câu`;
+
+            if (allItems.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-slate-500">
+                            Không có dữ liệu trong Database. Vui lòng Import hoặc khôi phục mặc định!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            allItems.forEach(item => {
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-slate-900/40 transition-colors duration-150 db-row-item">
+                        <td class="p-3 font-mono text-[10px] text-indigo-400 select-all font-bold">${item.id || 'N/A'}</td>
+                        <td class="p-3">
+                            <span class="text-slate-200 font-extrabold text-[11px] block">${item.topicName}</span>
+                            <span class="text-[9px] text-slate-500 uppercase tracking-widest block mt-0.5">${item.category} / ${item.part}</span>
+                        </td>
+                        <td class="p-3 font-mono text-[10px] text-amber-300 select-all">${item.pattern || 'N/A'}</td>
+                        <td class="p-3 font-bold text-slate-100 select-all">${item.example || 'N/A'}</td>
+                        <td class="p-3 italic text-slate-400 select-all">${item.exampleVN || 'N/A'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Live filtration engine on keyup
+        function filterPreviewDatabase() {
+            const query = document.getElementById('dbSearchField').value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.db-row-item');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        // ==================== LOCAL DATA PERSISTENCE ====================
+        function updateXPAndStreakPoints(xpGained, streakGained) {
+            if (xpGained > 0) {
+                xp += xpGained;
+                localStorage.setItem('xp_reflex_app', xp);
+                document.getElementById('xpCount').innerText = xp;
+            }
+            if (streakGained > 0) {
+                const today = new Date().toDateString();
+                const lastLogin = localStorage.getItem('last_login_reflex');
+                if (lastLogin !== today) {
+                    streak += streakGained;
+                    localStorage.setItem('streak_reflex_app', streak);
+                    localStorage.setItem('last_login_reflex', today);
+                    document.getElementById('streakCount').innerText = streak;
+                }
+            }
+        }
+
+        function saveCompletedSentence(id) {
+            if (!masteredSentences.includes(id)) {
+                masteredSentences.push(id);
+                localStorage.setItem('mastered_sentences', JSON.stringify(masteredSentences));
+                document.getElementById('masteredCount').innerText = masteredSentences.length;
+            }
+        }
+
+        function resetStats() {
+            playChimeSound('error');
+            if (confirm("Hành động này sẽ xóa sạch điểm tích lũy, streak và lịch sử. Bạn có muốn tiếp tục?")) {
+                xp = 0;
+                streak = 0;
+                masteredSentences = [];
+                speechHistory = {};
+                localStorage.setItem('xp_reflex_app', 0);
+                localStorage.setItem('streak_reflex_app', 0);
+                localStorage.setItem('mastered_sentences', JSON.stringify([]));
+                localStorage.removeItem('last_login_reflex');
+
+                document.getElementById('xpCount').innerText = '0';
+                document.getElementById('streakCount').innerText = '0';
+                document.getElementById('masteredCount').innerText = '0';
+
+                showToast("Đã thiết lập lại trạng thái ban đầu!");
+                loadTopicDataset();
+                refreshPreviewDatabaseTable();
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('customToast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.className = "fixed bottom-5 right-5 z-50 glass-card border border-indigo-500/30 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-slate-100 font-bold text-xs transform translate-y-0 opacity-100 transition-all duration-300";
+            
+            setTimeout(() => {
+                toast.className = "fixed bottom-5 right-5 z-50 glass-card border border-indigo-500/30 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-slate-100 font-bold text-xs transform translate-y-20 opacity-0 transition-all duration-300";
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
