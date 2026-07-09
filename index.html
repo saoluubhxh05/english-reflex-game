@@ -102,15 +102,18 @@
                     <i data-lucide="gauge" class="w-4 h-4 text-indigo-600"></i>
                     <span>2. Cấp Độ Thách Thức</span>
                 </h3>
-                <div class="grid grid-cols-3 gap-2 bg-slate-100 p-1.5 rounded-xl">
-                    <button id="level-easy" class="level-btn py-2 text-center text-[11px] font-bold rounded-lg bg-white text-slate-900 shadow-sm transition-all">
-                        Lvl 1 (Cơ bản)
+                <div class="grid grid-cols-4 gap-1.5 bg-slate-100 p-1.5 rounded-xl">
+                    <button id="level-easy" class="level-btn py-2 text-center text-[10px] font-bold rounded-lg bg-white text-slate-900 shadow-sm transition-all">
+                        Lvl 1
                     </button>
-                    <button id="level-hard" class="level-btn py-2 text-center text-[11px] font-bold rounded-lg text-slate-500 hover:text-slate-900 transition-all">
-                        Lvl 2 (Khó)
+                    <button id="level-hard" class="level-btn py-2 text-center text-[10px] font-bold rounded-lg text-slate-500 hover:text-slate-900 transition-all">
+                        Lvl 2
                     </button>
-                    <button id="level-master" class="level-btn py-2 text-center text-[11px] font-bold rounded-lg text-slate-500 hover:text-slate-900 transition-all">
-                        Lvl 3 (Master)
+                    <button id="level-master" class="level-btn py-2 text-center text-[10px] font-bold rounded-lg text-slate-500 hover:text-slate-900 transition-all">
+                        Lvl 3
+                    </button>
+                    <button id="level-elite" class="level-btn py-2 text-center text-[10px] font-bold rounded-lg text-slate-500 hover:text-slate-900 transition-all">
+                        Lvl 4
                     </button>
                 </div>
                 <p id="level-desc" class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100 leading-relaxed">
@@ -211,7 +214,7 @@
                         <h2 id="vietnamese-prompt" class="text-2xl sm:text-3xl font-extrabold text-slate-950 leading-snug">Tôi tên là Minh.</h2>
                     </div>
 
-                    <!-- English Target (Hidden in Level 2 & 3) -->
+                    <!-- English Target (Hidden in Level 2) -->
                     <div id="english-hint-container" class="space-y-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Cú pháp cấu trúc khuyên dùng:</p>
@@ -267,19 +270,18 @@
                 </div>
             </div>
 
-            <!-- Level 3 Interactive Mindmap Grid View -->
+            <!-- Level 3 & Level 4 Interactive Mindmap Grid View -->
             <div id="lvl3-monologue-container" class="hidden grid grid-cols-1 md:grid-cols-12 gap-6 bg-white border border-indigo-150 rounded-3xl p-6 shadow-sm min-h-[450px] relative overflow-hidden">
                 <!-- Left/Middle Section: English translation prompts & spoken results -->
                 <div class="md:col-span-8 flex flex-col justify-between space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <h4 class="text-xs font-extrabold text-indigo-700 uppercase tracking-widest flex items-center gap-1.5">
                             <i data-lucide="message-square" class="w-4 h-4"></i>
-                            BẢN GHI PHÁT ÂM THEO TIẾN TRÌNH
+                            BẢN GHI PHÁT ÂM THEO TIẾN TRÌNH (Ô GIỮA)
                         </h4>
-                        <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-bold">Ô Giữa</span>
                     </div>
                     <div id="lvl3-transcript-list" class="space-y-3 flex-1 overflow-y-auto max-h-[350px] pr-2 no-scrollbar">
-                        <!-- Dynamic lines showing Vietnamese requirement vs user spoken English mapped row-by-row -->
+                        <!-- Dynamic lines showing requirements vs spoken English -->
                     </div>
                 </div>
 
@@ -377,7 +379,7 @@
 
         // Core App States
         let currentMode = 'flashcard'; // 'flashcard' | 'substitution' | 'monologue'
-        let currentLevel = 'easy'; // 'easy' (1) | 'hard' (2) | 'master' (3)
+        let currentLevel = 'easy'; // 'easy' (1) | 'hard' (2) | 'master' (3) | 'elite' (4)
         let filteredDataset = [];
         let currentSentenceIndex = 0;
         let selectedOutlinePart = 'All';
@@ -385,7 +387,7 @@
         // Substitution Dynamic Counter
         let currentSubVocabIndex = 0;
 
-        // Level 3 Monologue Progress Storage Arrays
+        // Level 3 & 4 Monologue Progress Storage Arrays
         let spokenTranscripts = [];
         let spokenScores = [];
 
@@ -413,7 +415,8 @@
             levelBtns: {
                 easy: document.getElementById('level-easy'),
                 hard: document.getElementById('level-hard'),
-                master: document.getElementById('level-master')
+                master: document.getElementById('level-master'),
+                elite: document.getElementById('level-elite')
             },
             levelDesc: document.getElementById('level-desc'),
             toggleContinuous: document.getElementById('toggle-continuous'),
@@ -495,15 +498,42 @@
         }
 
         function applyFilters() {
+            let baseList = [];
             if (selectedOutlinePart === 'All') {
-                filteredDataset = [...dataset];
+                baseList = [...dataset];
             } else {
-                filteredDataset = dataset.filter(item => item.part === selectedOutlinePart);
+                baseList = dataset.filter(item => item.part === selectedOutlinePart);
             }
+
+            if (currentLevel === 'elite') {
+                // LEVEL 4 (ELITE CHALLENGE): Pick exactly 1 random item per OutlinePartName
+                const groupedByPart = {};
+                const partOrder = [];
+                
+                baseList.forEach(item => {
+                    if (!groupedByPart[item.part]) {
+                        groupedByPart[item.part] = [];
+                        partOrder.push(item.part);
+                    }
+                    groupedByPart[item.part].push(item);
+                });
+
+                filteredDataset = [];
+                partOrder.forEach(part => {
+                    const itemsInPart = groupedByPart[part];
+                    if (itemsInPart.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * itemsInPart.length);
+                        filteredDataset.push(itemsInPart[randomIndex]);
+                    }
+                });
+            } else {
+                filteredDataset = baseList;
+            }
+
             currentSentenceIndex = 0;
             currentSubVocabIndex = 0;
             
-            // Re-initialize Level 3 dynamic storage arrays
+            // Re-initialize Level 3 & 4 dynamic storage arrays
             spokenTranscripts = Array(filteredDataset.length).fill("");
             spokenScores = Array(filteredDataset.length).fill(0);
 
@@ -590,22 +620,48 @@
             let score = 0;
             const targetStr = currentItem.example.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
 
-            if (currentMode === 'flashcard' || currentMode === 'monologue') {
-                score = calculateVocalSimilarity(text, targetStr);
-            } else if (currentMode === 'substitution') {
-                const currentVocab = currentItem.vocab[currentSubVocabIndex]?.toLowerCase() || "";
-                const spokenWords = text.toLowerCase().split(/\s+/);
-                const containsVocab = spokenWords.some(w => w.includes(currentVocab) || currentVocab.includes(w));
+            if (currentLevel === 'elite') {
+                // LEVEL 4: Freeform evaluation logic
+                const cleanText = text.toLowerCase();
+                const keyword = (currentItem.keywords || "").toLowerCase();
                 
-                if (containsVocab) {
-                    score = 95; // Bonus match score
+                // Compare with default target
+                const similarityToExample = calculateVocalSimilarity(text, targetStr);
+                
+                // Compare with dynamic related vocabs
+                let vocabMatch = false;
+                if (currentItem.vocab && Array.isArray(currentItem.vocab)) {
+                    vocabMatch = currentItem.vocab.some(v => cleanText.includes(v.toLowerCase()));
+                }
+
+                if (similarityToExample >= 60) {
+                    score = similarityToExample;
+                } else if (cleanText.includes(keyword) || vocabMatch) {
+                    // Reward freeform speak success if keyword or helper vocab exists in spoken text
+                    score = Math.max(75, similarityToExample + 25);
+                    if (score > 100) score = 100;
                 } else {
+                    score = Math.max(15, similarityToExample);
+                }
+            } else {
+                // Standard mode scores
+                if (currentMode === 'flashcard' || currentMode === 'monologue') {
                     score = calculateVocalSimilarity(text, targetStr);
-                    if (score < 50) score = 10;
+                } else if (currentMode === 'substitution') {
+                    const currentVocab = currentItem.vocab[currentSubVocabIndex]?.toLowerCase() || "";
+                    const spokenWords = text.toLowerCase().split(/\s+/);
+                    const containsVocab = spokenWords.some(w => w.includes(currentVocab) || currentVocab.includes(w));
+                    
+                    if (containsVocab) {
+                        score = 95; 
+                    } else {
+                        score = calculateVocalSimilarity(text, targetStr);
+                        if (score < 50) score = 10;
+                    }
                 }
             }
 
-            // Sync with Level 3 database matrices
+            // Sync with Level 3 & 4 data
             spokenTranscripts[currentSentenceIndex] = text;
             spokenScores[currentSentenceIndex] = score;
 
@@ -615,8 +671,7 @@
                 renderGlowSuccessIndicator();
                 triggerNextFlowStep();
             } else {
-                // If in Level 3, update display instantly even on partial match
-                if (currentLevel === 'master') {
+                if (currentLevel === 'master' || currentLevel === 'elite') {
                     renderLevel3Interface();
                 }
             }
@@ -680,7 +735,7 @@
 
         function triggerNextFlowStep() {
             if (!dom.toggleAutonext.checked) {
-                if (currentLevel === 'master') {
+                if (currentLevel === 'master' || currentLevel === 'elite') {
                     renderLevel3Interface();
                 }
                 return;
@@ -710,7 +765,7 @@
 
         // Render Monologue horizontal outlines (Lvl 1 & 2)
         function renderHorizontalRoadmap() {
-            if (currentMode !== 'monologue' || currentLevel === 'master') {
+            if (currentMode !== 'monologue' || currentLevel === 'master' || currentLevel === 'elite') {
                 dom.monologueOutlineContainer.classList.add('hidden');
                 return;
             }
@@ -762,7 +817,7 @@
             }
         }
 
-        // Level 3 interactive rendering: Left side spoken alignment & right side vertical keywords list
+        // Level 3 & 4 interactive rendering
         function renderLevel3Interface() {
             if (filteredDataset.length === 0) return;
 
@@ -776,7 +831,7 @@
 
                 // Render Left/Middle Spoken Row
                 const rowDiv = document.createElement('div');
-                rowDiv.className = `p-4 rounded-2xl border transition-all duration-300 flex flex-col justify-between min-h-[85px] ${
+                rowDiv.className = `p-4 rounded-2xl border transition-all duration-300 flex flex-col justify-center min-h-[85px] ${
                     isCurrent 
                         ? 'bg-indigo-50/50 border-indigo-200 ring-2 ring-indigo-500/10' 
                         : score >= 65 
@@ -790,17 +845,32 @@
                     scoreTag = `<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${badgeClass}">${score}% Match</span>`;
                 }
 
-                rowDiv.innerHTML = `
-                    <div class="flex items-start justify-between gap-4">
-                        <div class="space-y-1.5 flex-1">
-                            <p class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Câu ${index + 1}: ${item.translation}</p>
-                            <p class="text-sm font-bold text-slate-900 transition-all">
-                                ${transcript ? `"${transcript}"` : '<span class="text-slate-400 italic font-medium">Đang chờ bạn phát âm câu này...</span>'}
-                            </p>
+                if (currentLevel === 'elite') {
+                    // LEVEL 4: Absolutely blank if transcript is not recognized yet
+                    rowDiv.innerHTML = `
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="space-y-1.5 flex-1 min-h-[2.5rem] flex items-center">
+                                <p class="text-sm font-bold text-indigo-950 leading-relaxed transition-all">
+                                    ${transcript ? `"${transcript}"` : ''}
+                                </p>
+                            </div>
+                            ${transcript ? scoreTag : ''}
                         </div>
-                        ${scoreTag}
-                    </div>
-                `;
+                    `;
+                } else {
+                    // LEVEL 3: Standard Master view with translated prompt hints
+                    rowDiv.innerHTML = `
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="space-y-1.5 flex-1">
+                                <p class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Câu ${index + 1}: ${item.translation}</p>
+                                <p class="text-sm font-bold text-slate-900 transition-all">
+                                    ${transcript ? `"${transcript}"` : '<span class="text-slate-400 italic font-medium">Đang chờ bạn phát âm câu này...</span>'}
+                                </p>
+                            </div>
+                            ${scoreTag}
+                        </div>
+                    `;
+                }
                 dom.lvl3TranscriptList.appendChild(rowDiv);
 
                 // Render Right Column Keyword Row
@@ -858,8 +928,8 @@
 
             const item = filteredDataset[currentSentenceIndex];
 
-            // Render matching level screens
-            if (currentLevel === 'master') {
+            // Handle Level 3 and Level 4 Dual-Column Mindmap Views
+            if (currentLevel === 'master' || currentLevel === 'elite') {
                 dom.practiceCard.classList.add('hidden');
                 dom.lvl3MonologueContainer.classList.remove('hidden');
                 renderLevel3Interface();
@@ -970,7 +1040,7 @@
 
                     currentMode = mode;
                     currentSubVocabIndex = 0;
-                    renderActiveCard();
+                    applyFilters();
                 });
             });
 
@@ -978,10 +1048,11 @@
             dom.levelBtns.easy.addEventListener('click', () => changeLevel('easy'));
             dom.levelBtns.hard.addEventListener('click', () => changeLevel('hard'));
             dom.levelBtns.master.addEventListener('click', () => changeLevel('master'));
+            dom.levelBtns.elite.addEventListener('click', () => changeLevel('elite'));
 
             function changeLevel(lvl) {
                 Object.keys(dom.levelBtns).forEach(l => {
-                    dom.levelBtns[l].className = `level-btn py-2 text-center text-[11px] font-bold rounded-lg transition-all ${
+                    dom.levelBtns[l].className = `level-btn py-2 text-center text-[10px] font-bold rounded-lg transition-all ${
                         l === lvl ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
                     }`;
                 });
@@ -991,10 +1062,12 @@
                     dom.levelDesc.textContent = "💡 Hiển thị đầy đủ câu mẫu tiếng Anh, từ khóa gợi ý và ngữ pháp tham chiếu để làm quen.";
                 } else if (lvl === 'hard') {
                     dom.levelDesc.textContent = "⚡ Ẩn câu mẫu tiếng Anh, chỉ hiện từ khóa và nghĩa tiếng Việt. Nói câu tiếng Anh tự do để tăng tốc phản xạ!";
-                } else {
+                } else if (lvl === 'master') {
                     dom.levelDesc.textContent = "🏆 Ẩn toàn bộ mẫu câu. Từ khóa (Keywords) xuất hiện ở cột dọc bên phải. Nói từng câu tương ứng với từ khóa sáng lên, bản dịch hiện ở cột giữa.";
+                } else if (lvl === 'elite') {
+                    dom.levelDesc.textContent = "🔥 Lvl 4: Mỗi phần Outline chọn ngẫu nhiên 1 Keyword. Ẩn hoàn toàn mẫu câu/gợi ý. Nói tự do theo từ khóa sáng lên ở cột phải; ô giữa chỉ hiện câu bạn nói sau khi nhận diện.";
                 }
-                renderActiveCard();
+                applyFilters();
             }
 
             // Click navigations
