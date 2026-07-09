@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngSpur - Quản Lý Dữ Liệu Học Tập</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SheetJS CDN library for Excel spreadsheet binary parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-600 text-white rounded-xl shadow-md">
+                    <i data-lucide="database" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-slate-950 leading-tight">Quản Lý Dữ Liệu</h1>
+                    <p class="text-xs text-slate-500 font-medium">Bảng điều khiển quản lý & Đồng bộ Excel</p>
+                </div>
+            </div>
+            
+            <a href="index.html" class="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-indigo-600 rounded-xl text-sm font-semibold transition-all">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>Quay lại trang học tập</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Form Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-8 w-full">
+        
+        <!-- Grid layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left panel: File input & Guidelines -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Guidelines panel -->
+                <div class="bg-indigo-50 border border-indigo-150 rounded-2xl p-5 space-y-3.5">
+                    <h3 class="text-sm font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="info" class="w-4 h-4 text-indigo-600"></i>
+                        <span>Định dạng Excel mẫu chuẩn</span>
+                    </h3>
+                    <p class="text-xs text-indigo-900/80 leading-relaxed">
+                        Hãy đảm bảo dòng đầu tiên của file Excel chứa đúng các tiêu đề cột sau đây để hệ thống tự động bóc tách dữ liệu chính xác:
+                    </p>
+                    <div class="grid grid-cols-2 gap-2 text-[11px] font-mono bg-white p-3 rounded-xl border border-indigo-100">
+                        <div>• <span class="font-bold text-slate-900">SentenceID</span></div>
+                        <div>• <span class="font-bold text-slate-900">Pattern_TopicType</span></div>
+                        <div>• <span class="font-bold text-slate-900">OutlinePartName</span></div>
+                        <div>• <span class="font-bold text-slate-900">Mẫu câu</span></div>
+                        <div>• <span class="font-bold text-slate-900">Level</span></div>
+                        <div>• <span class="font-bold text-slate-900">Keywords</span></div>
+                        <div>• <span class="font-bold text-slate-900">Example</span></div>
+                        <div>• <span class="font-bold text-slate-900">Dịch Example</span></div>
+                        <div>• <span class="font-bold text-slate-900">Vocabulary</span></div>
+                        <div>• <span class="font-bold text-slate-900">Dịch Vocabulary</span></div>
+                    </div>
+                </div>
+
+                <!-- Excel Drag/Drop Area -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                    <h3 class="text-sm font-bold text-slate-950 uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="file-spreadsheet" class="w-4 h-4 text-indigo-600"></i>
+                        <span>Tải tệp Excel lên</span>
+                    </h3>
+                    
+                    <div class="border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-2xl p-6 text-center transition-all flex flex-col justify-center items-center gap-3 bg-slate-50 cursor-pointer relative" id="drop-zone">
+                        <input type="file" id="file-input" class="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx, .xls">
+                        <div class="p-3 bg-white text-emerald-600 rounded-xl shadow-sm">
+                            <i data-lucide="file-up" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900">Kéo thả file Excel (.xlsx, .xls)</p>
+                            <p class="text-xs text-slate-500 mt-1">Hoặc nhấp chuột để chọn tệp</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Excel copy-paste direct area -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                    <h3 class="text-sm font-bold text-slate-950 uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="copy" class="w-4 h-4 text-indigo-600"></i>
+                        <span>Dán từ bảng Excel (Copy-Paste)</span>
+                    </h3>
+                    <textarea id="raw-tsv-input" placeholder="Chọn toàn bộ bảng trong Excel của bạn, Copy và dán trực tiếp vào đây..." class="w-full h-36 p-3 text-xs font-mono bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-all resize-none"></textarea>
+                </div>
+
+            </div>
+
+            <!-- Right Panel: Data Preview Board -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5 flex flex-col h-full">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="eye" class="w-5 h-5 text-indigo-600"></i>
+                            <h3 class="text-sm font-extrabold text-slate-950 uppercase tracking-wider">Xem trước dữ liệu Excel (Preview)</h3>
+                        </div>
+                        <span id="preview-row-count" class="text-xs bg-indigo-50 text-indigo-700 font-bold px-3 py-1 rounded-full">0 hàng</span>
+                    </div>
+
+                    <!-- Table Preview Scrollable wrapper -->
+                    <div class="border border-slate-200 rounded-xl overflow-hidden overflow-y-auto max-h-[350px] flex-1">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-50 border-b border-slate-200 font-bold text-slate-600 sticky top-0 z-10">
+                                <tr>
+                                    <th class="p-3">ID</th>
+                                    <th class="p-3">Từ khóa (Key)</th>
+                                    <th class="p-3">Mẫu câu</th>
+                                    <th class="p-3">Ví dụ</th>
+                                    <th class="p-3">Dịch</th>
+                                </tr>
+                            </thead>
+                            <tbody id="preview-table-body" class="divide-y divide-slate-100 text-slate-600">
+                                <tr>
+                                    <td colspan="5" class="p-12 text-center text-slate-400 font-medium">Chưa có dữ liệu Excel xem trước...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Dynamic database status indicators -->
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between text-xs font-semibold">
+                        <span id="excel-parse-status" class="text-slate-500">Hệ thống đang đợi bạn chọn file...</span>
+                        <div class="flex gap-2">
+                            <button id="btn-reset-default" class="px-3.5 py-2 border border-slate-200 text-slate-600 hover:bg-slate-100 rounded-lg transition-all">Khôi phục mặc định</button>
+                            <button id="btn-commit-db" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm font-bold transition-all">Đồng bộ cơ sở dữ liệu</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        let parsedExcelData = [];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            registerDataEvents();
+        });
+
+        function registerDataEvents() {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const rawTsvInput = document.getElementById('raw-tsv-input');
+            const btnCommitDb = document.getElementById('btn-commit-db');
+            const btnResetDefault = document.getElementById('btn-reset-default');
+            const parseStatus = document.getElementById('excel-parse-status');
+
+            // Drag and Drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-indigo-500', 'bg-indigo-50/50');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-indigo-500', 'bg-indigo-50/50');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-indigo-500', 'bg-indigo-50/50');
+                const file = e.dataTransfer.files[0];
+                if (file) handleExcelLoad(file);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleExcelLoad(file);
+            });
+
+            // Handlers for direct clipboard paste actions
+            rawTsvInput.addEventListener('input', () => {
+                const rawVal = rawTsvInput.value.trim();
+                if (rawVal) {
+                    parseTsvMatrixText(rawVal);
+                }
+            });
+
+            btnResetDefault.addEventListener('click', () => {
+                if (confirm("Bạn có chắc chắn muốn xóa dữ liệu hiện tại và khôi phục về bộ 32 mẫu câu mặc định?")) {
+                    localStorage.removeItem('engspur_dataset');
+                    parseStatus.textContent = "Đã khôi phục thành công dữ liệu gốc!";
+                    parseStatus.className = "text-emerald-600 font-bold";
+                    parsedExcelData = [];
+                    renderPreviewTable();
+                }
+            });
+
+            btnCommitDb.addEventListener('click', commitExcelDatabase);
+        }
+
+        // Processing spreadsheet uploads using SheetJS library
+        function handleExcelLoad(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            const parseStatus = document.getElementById('excel-parse-status');
+            
+            if (ext !== 'xlsx' && ext !== 'xls') {
+                parseStatus.textContent = "Chỉ chấp nhận tệp định dạng Excel (.xlsx, .xls)!";
+                parseStatus.className = "text-red-600 font-bold";
+                return;
+            }
+
+            parseStatus.textContent = `Đang đọc file: ${file.name}...`;
+            parseStatus.className = "text-indigo-600 font-bold animate-pulse";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Parse the primary sheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    processSpreadsheetRows(rows);
+                } catch(err) {
+                    console.error("SheetJS parse failure:", err);
+                    parseStatus.textContent = "Lỗi phân tích file Excel. Vui lòng thử lại!";
+                    parseStatus.className = "text-red-600 font-bold";
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function parseTsvMatrixText(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length < 2) return;
+
+            // Microsoft Excel uses tab (\t) characters to separate cells on copying
+            const rows = lines.map(line => line.split('\t').map(cell => cell.trim()));
+            processSpreadsheetRows(rows);
+        }
+
+        function processSpreadsheetRows(rows) {
+            const parseStatus = document.getElementById('excel-parse-status');
+            if (rows.length < 2) {
+                parseStatus.textContent = "Dữ liệu bảng tính trống hoặc không đủ dòng!";
+                parseStatus.className = "text-red-600 font-bold";
+                return;
+            }
+
+            const headers = rows[0].map(h => String(h).trim().toLowerCase());
+            
+            const idxId = headers.indexOf('sentenceid');
+            const idxTopic = headers.indexOf('pattern_topictype');
+            const idxPart = headers.indexOf('outlinepartname');
+            const idxPattern = headers.indexOf('mẫu câu');
+            const idxLevel = headers.indexOf('level');
+            const idxKeywords = headers.indexOf('keywords');
+            const idxExample = headers.indexOf('example');
+            const idxTrExample = headers.indexOf('dịch example');
+            const idxVocab = headers.indexOf('vocabulary');
+            const idxVocabTr = headers.indexOf('dịch vocabulary');
+
+            if (idxExample === -1 || idxPattern === -1) {
+                parseStatus.textContent = "Lỗi: File thiếu các cột bắt buộc: 'Mẫu câu' và 'Example'!";
+                parseStatus.className = "text-red-600 font-bold";
+                return;
+            }
+
+            parsedExcelData = [];
+
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (!row || row.length === 0) continue;
+
+                let vocabArr = [];
+                let vocabTrArr = [];
+
+                const rawVocab = row[idxVocab] || "";
+                const rawVocabTr = row[idxVocabTr] || "";
+
+                // Attempt decoding array representations safely
+                try {
+                    if (rawVocab && (String(rawVocab).startsWith('[') || String(rawVocab).startsWith('{'))) {
+                        vocabArr = JSON.parse(String(rawVocab).replace(/'/g, '"'));
+                    } else if (rawVocab) {
+                        vocabArr = String(rawVocab).split(',').map(v => v.trim());
+                    }
+                } catch(e) {
+                    vocabArr = String(rawVocab).replace(/[\[\]"]/g, "").split(",").map(v => v.trim());
+                }
+
+                try {
+                    if (rawVocabTr && (String(rawVocabTr).startsWith('[') || String(rawVocabTr).startsWith('{'))) {
+                        vocabTrArr = JSON.parse(String(rawVocabTr).replace(/'/g, '"'));
+                    } else if (rawVocabTr) {
+                        vocabTrArr = String(rawVocabTr).split(',').map(v => v.trim());
+                    }
+                } catch(e) {
+                    vocabTrArr = String(rawVocabTr).replace(/[\[\]"]/g, "").split(",").map(v => v.trim());
+                }
+
+                parsedExcelData.push({
+                    id: String(row[idxId] || `P${String(i).padStart(3, '0')}`).trim(),
+                    topic: String(row[idxTopic] || "General").trim(),
+                    part: String(row[idxPart] || "Introduction").trim(),
+                    pattern: String(row[idxPattern] || "").trim(),
+                    grammar: "S + V",
+                    level: String(row[idxLevel] || "A2").trim(),
+                    keywords: String(row[idxKeywords] || "").trim(),
+                    example: String(row[idxExample] || "").trim(),
+                    translation: String(row[idxTrExample] || "").trim(),
+                    vocab: vocabArr.filter(v => v.length > 0),
+                    vocab_tr: vocabTrArr.filter(v => v.length > 0)
+                });
+            }
+
+            parseStatus.textContent = "Bóc tách dữ liệu Excel thành công!";
+            parseStatus.className = "text-emerald-600 font-bold";
+
+            renderPreviewTable();
+        }
+
+        function renderPreviewTable() {
+            const tableBody = document.getElementById('preview-table-body');
+            const rowCountLabel = document.getElementById('preview-row-count');
+
+            rowCountLabel.textContent = `${parsedExcelData.length} hàng`;
+            tableBody.innerHTML = '';
+
+            if (parsedExcelData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="p-12 text-center text-slate-400 font-medium">Chưa có dữ liệu Excel xem trước...</td></tr>`;
+                return;
+            }
+
+            // Slice limit for table preview rendering performance
+            parsedExcelData.slice(0, 10).forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-100 hover:bg-slate-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-slate-900">${item.id}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 font-bold rounded text-[10px]">${item.keywords || 'N/A'}</span></td>
+                    <td class="p-3 max-w-[200px] truncate font-mono text-indigo-600 font-semibold">${item.pattern}</td>
+                    <td class="p-3 font-medium text-slate-700 max-w-[150px] truncate">${item.example}</td>
+                    <td class="p-3 text-slate-500 max-w-[150px] truncate">${item.translation}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            if (parsedExcelData.length > 10) {
+                const notice = document.createElement('tr');
+                notice.innerHTML = `<td colspan="5" class="p-3 bg-slate-50 text-center text-slate-500 font-semibold">Và ${parsedExcelData.length - 10} hàng dữ liệu khác...</td>`;
+                tableBody.appendChild(notice);
+            }
+        }
+
+        function commitExcelDatabase() {
+            const parseStatus = document.getElementById('excel-parse-status');
+            if (parsedExcelData.length === 0) {
+                parseStatus.textContent = "Hãy dán dữ liệu hoặc nạp tệp Excel trước khi nhấn lưu!";
+                parseStatus.className = "text-red-600 font-bold";
+                return;
+            }
+
+            try {
+                localStorage.setItem('engspur_dataset', JSON.stringify(parsedExcelData));
+                parseStatus.textContent = `Đồng bộ thành công ${parsedExcelData.length} mẫu câu vào trình duyệt!`;
+                parseStatus.className = "text-emerald-600 font-bold animate-pulse";
+            } catch(e) {
+                console.error(e);
+                parseStatus.textContent = "Trình duyệt quá tải bộ nhớ. Vui lòng rút gọn file Excel!";
+                parseStatus.className = "text-red-600 font-bold";
+            }
+        }
+    </script>
+</body>
+</html>
