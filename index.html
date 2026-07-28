@@ -11,7 +11,7 @@
     <!-- SheetJS (XLSX) CDN cho xử lý File Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
@@ -39,23 +39,22 @@
             </div>
 
             <!-- MODULE NAVIGATION TABS -->
-            <nav class="flex bg-slate-800 p-1 rounded-xl border border-slate-700">
-                <button id="tab-monologue-btn" onclick="switchTab('monologue')" class="px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-2 bg-indigo-600 text-white shadow-sm">
+            <nav class="flex bg-slate-800 p-1 rounded-xl border border-slate-700 w-full sm:w-auto overflow-x-auto">
+                <button id="tab-monologue-btn" onclick="switchTab('monologue')" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-1.5 whitespace-nowrap">
                     <i data-lucide="map-pin" class="w-4 h-4"></i>
                     <span>1. Monologue Roadmap</span>
                 </button>
-                <button id="tab-substitution-btn" onclick="switchTab('substitution')" class="px-4 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-2">
+                <button id="tab-substitution-btn" onclick="switchTab('substitution')" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap bg-teal-600 text-white shadow-sm">
                     <i data-lucide="repeat" class="w-4 h-4"></i>
-                    <span>2. Substitution Drills (Mẫu Câu)</span>
+                    <span>2. Substitution Drills</span>
                 </button>
-                <button id="tab-data-btn" onclick="switchTab('data')" class="px-4 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-2">
+                <button id="tab-data-btn" onclick="switchTab('data')" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-1.5 whitespace-nowrap">
                     <i data-lucide="file-spread-sheet" class="w-4 h-4"></i>
                     <span>3. Quản Lý Dữ Liệu Excel</span>
-                    <span class="bg-emerald-500 text-slate-950 text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1">Excel Active</span>
                 </button>
             </nav>
 
-            <div class="flex items-center space-x-2">
+            <div class="hidden sm:flex items-center space-x-2">
                 <span id="speech-status-badge" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 mr-1.5 bg-emerald-400 rounded-full animate-ping"></span>
                     Sẵn sàng (en-US)
@@ -64,46 +63,66 @@
         </div>
     </header>
 
-    <!-- CONTROL TOOLBAR / GLOBAL SETTINGS -->
+    <!-- CONTROL TOOLBAR / GLOBAL SETTINGS WITH COMPACT SELECTORS -->
     <section class="bg-white border-b border-slate-200 py-3 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex flex-wrap items-center gap-4">
-                <div class="flex items-center space-x-2">
-                    <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Chủ đề:</label>
-                    <select id="topic-select" onchange="changeTopic(this.value)" class="bg-slate-100 border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <!-- Populated dynamically via updateTopicDropdown() -->
+        <div class="max-w-7xl mx-auto px-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
+            
+            <!-- SELECTORS GROUP: CHỦ ĐỀ, MẪU CÂU TRONG CHỦ ĐỀ & MẪU CÂU HIỆN TẠI -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full lg:w-auto">
+                <!-- 1. Chọn Chủ Đề -->
+                <div class="flex flex-col">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">1. Chủ đề:</label>
+                    <select id="topic-select" onchange="changeTopic(this.value)" class="bg-slate-100 border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-full truncate">
+                        <!-- Populated dynamically -->
                     </select>
+                </div>
+
+                <!-- 2. Mẫu câu trong chủ đề này -->
+                <div class="flex flex-col">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">2. Mẫu câu trong chủ đề:</label>
+                    <select id="pattern-select" onchange="changePatternSelect(parseInt(this.value))" class="bg-slate-100 border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-bold text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full truncate">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <!-- 3. Mẫu câu hiện tại -->
+                <div class="flex flex-col">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">3. Mẫu câu hiện tại:</label>
+                    <div id="active-pattern-badge" class="bg-teal-50 border border-teal-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-teal-800 flex items-center justify-between h-[34px]">
+                        <span id="active-pattern-text" class="truncate font-mono">Mẫu 1/1</span>
+                        <span id="active-drill-count" class="bg-teal-200 text-teal-900 text-[10px] px-1.5 py-0.5 rounded-full font-black ml-1 shrink-0">5 Drills</span>
+                    </div>
                 </div>
             </div>
 
             <!-- SMART CONFIG TOGGLES -->
-            <div class="flex flex-wrap items-center gap-4">
+            <div class="flex flex-wrap items-center gap-3 pt-2 lg:pt-0 border-t lg:border-t-0 border-slate-100 w-full lg:w-auto justify-between lg:justify-end">
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="keep-mic-toggle" class="sr-only peer" onchange="toggleKeepMic()">
-                    <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-                    <span class="ml-2 text-xs font-medium text-slate-700">Giữ Mic Luôn Bật</span>
+                    <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                    <span class="ml-1.5 text-xs font-semibold text-slate-700">Giữ Mic</span>
                 </label>
 
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="auto-next-toggle" checked class="sr-only peer">
-                    <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-                    <span class="ml-2 text-xs font-medium text-slate-700">Tự Động Chuyển Câu</span>
+                    <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                    <span class="ml-1.5 text-xs font-semibold text-slate-700">Tự Chuyển (≥50%)</span>
                 </label>
 
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="auto-tts-question-toggle" checked class="sr-only peer">
-                    <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-600"></div>
-                    <span class="ml-2 text-xs font-medium text-slate-700">Tự Động Đọc Câu Hỏi (TTS)</span>
+                    <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-teal-600"></div>
+                    <span class="ml-1.5 text-xs font-semibold text-slate-700">Đọc Hỏi (TTS)</span>
                 </label>
             </div>
         </div>
     </section>
 
     <!-- MAIN CONTENT AREA -->
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
+    <main class="flex-grow max-w-7xl w-full mx-auto p-3 sm:p-4 md:p-6">
 
-        <!-- TAB 1: MONOLOGUE ROADMAP (GIỮ NGUYÊN HOÀN TOÀN) -->
-        <div id="tab-monologue" class="tab-content space-y-6">
+        <!-- TAB 1: MONOLOGUE ROADMAP (MODULE CŨ NGUYÊN VẸN) -->
+        <div id="tab-monologue" class="tab-content space-y-6 hidden">
             <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 flex items-center justify-between">
                 <div>
                     <h2 class="text-base font-bold text-indigo-950">Dàn Ý Bài Nói Hoàn Chỉnh (Monologue Roadmap)</h2>
@@ -161,169 +180,121 @@
             </div>
         </div>
 
-        <!-- TAB 2: SUBSTITUTION DRILLS MODULE (MODULE PHẢN XẠ MẪU CÂU NÂNG CẤP) -->
-        <div id="tab-substitution" class="tab-content space-y-6 hidden">
-            
-            <!-- MODULE HEADER BANNER -->
-            <div class="bg-gradient-to-r from-teal-900 to-slate-900 text-white p-6 rounded-2xl shadow-md flex flex-wrap items-center justify-between gap-4 border border-teal-800">
-                <div class="space-y-1">
-                    <div class="flex items-center space-x-2">
-                        <span class="bg-teal-500 text-slate-950 text-xs font-extrabold px-2 py-0.5 rounded-full uppercase">Reflex Substitution Module</span>
-                        <span id="drill-topic-badge" class="text-xs text-teal-200 font-medium">Chủ đề: Describe Person</span>
-                    </div>
-                    <h2 class="text-xl font-bold tracking-tight">Bảng Luyện Tập Thay Thế Mẫu Câu (Substitution Drills)</h2>
-                    <p class="text-xs text-slate-300">Luyện phản xạ theo chủ đề: hoàn tất hết câu mẫu này sẽ tự động chuyển sang mẫu câu tiếp theo.</p>
-                </div>
+        <!-- TAB 2: SUBSTITUTION DRILLS MODULE (GIAO DIỆN THU GỌN TƯƠNG THÍCH ĐIỆN THOẠI) -->
+        <div id="tab-substitution" class="tab-content space-y-4 max-w-2xl mx-auto">
 
-                <div class="flex items-center space-x-3">
-                    <button onclick="switchTab('data')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-teal-500/30 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
-                        <i data-lucide="file-spread-sheet" class="w-4 h-4"></i>
-                        <span>Quản Lý / Import Excel</span>
-                    </button>
-                    <div class="bg-slate-800/80 px-4 py-2 rounded-xl border border-slate-700 text-right">
-                        <p class="text-[10px] text-slate-400 uppercase font-semibold">Mẫu câu & Tiến trình</p>
-                        <p id="drill-progress-text" class="text-sm font-bold text-teal-400">Mẫu 1/1 • Câu 1/5</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MAIN 3-COLUMN DRILL GRID -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-
-                <!-- CỘT 1: CÂU HỎI & CẤU TRÚC MẪU (4 cols) -->
-                <div class="md:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5 flex flex-col justify-between">
-                    <div class="space-y-4">
-                        <!-- QUESTION BOX WITH TTS -->
-                        <div class="p-4 bg-teal-50/70 border border-teal-100 rounded-xl space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-bold text-teal-800 uppercase tracking-wider flex items-center space-x-1">
-                                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
-                                    <span>Câu Hỏi Của Mẫu Câu</span>
-                                </span>
-                                <button onclick="speakText(currentDrillData.question)" class="text-teal-700 hover:text-teal-900 bg-teal-200/50 hover:bg-teal-200 p-1.5 rounded-lg transition" title="Nghe câu hỏi">
-                                    <i data-lucide="volume-2" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                            <p id="drill-question-text" class="text-base font-bold text-slate-900">What kind of person is he?</p>
-                        </div>
-
-                        <!-- MODEL PATTERN BOX -->
-                        <div class="p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center space-x-1">
-                                    <i data-lucide="layout-template" class="w-3.5 h-3.5"></i>
-                                    <span>Mẫu Câu Chuẩn (Pattern)</span>
-                                </span>
-                                <span id="pattern-index-badge" class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2 py-0.5 rounded">Mẫu 1/1</span>
-                            </div>
-                            <p id="drill-pattern-text" class="text-sm font-bold text-indigo-600 font-mono">He is a/an [Adj] person who always [Verb].</p>
-                            <div class="pt-1 flex items-center justify-between text-xs text-slate-500 border-t border-slate-200/60">
-                                <span>Từ gợi mở:</span>
-                                <span id="drill-cue-word" class="font-bold text-slate-700">Personality</span>
-                            </div>
-                        </div>
-
-                        <!-- CURRENT ACTIVE SUBSTITUTION DRILL TARGET -->
-                        <div class="p-4 bg-amber-50/80 border border-amber-200 rounded-xl space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider">Từ thay thế hiện tại:</span>
-                                <span id="drill-sub-word" class="bg-amber-200 text-amber-900 px-2 py-0.5 rounded text-xs font-extrabold">kind</span>
-                            </div>
-                            <div>
-                                <p class="text-[11px] text-slate-400 uppercase font-semibold">Câu đáp án mục tiêu (Target Drill):</p>
-                                <p id="drill-target-sentence" class="text-sm font-bold text-slate-800">He is a kind person who always helps others.</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] text-slate-400 uppercase font-semibold">Dịch nghĩa tiếng Việt:</p>
-                                <p id="drill-target-vietnamese" class="text-xs text-slate-600 italic">Anh ấy là một người tốt bụng, luôn giúp đỡ người khác.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-2">
-                        <button onclick="speakText(currentDrillItem.targetSentence)" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition border border-slate-200">
-                            <i data-lucide="volume-2" class="w-4 h-4 text-slate-600"></i>
-                            <span>Nghe Mẫu Đáp Án Chuẩn</span>
+            <!-- MAIN RESPONSIVE SINGLE-COLUMN DRILL CARD -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                
+                <!-- 1. CÂU HỎI CHO MẪU CÂU -->
+                <div class="p-3.5 bg-teal-50/80 border border-teal-200/80 rounded-xl space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-extrabold text-teal-800 uppercase tracking-wider flex items-center space-x-1">
+                            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                            <span>Câu Hỏi Cho Mẫu Câu</span>
+                        </span>
+                        <button onclick="speakText(currentDrillData.question)" class="text-teal-700 hover:text-teal-900 bg-teal-200/60 hover:bg-teal-200 p-1.5 rounded-lg transition flex items-center space-x-1 text-xs font-bold" title="Nghe câu hỏi">
+                            <i data-lucide="volume-2" class="w-4 h-4"></i>
+                            <span>Đọc hỏi</span>
                         </button>
                     </div>
+                    <p id="drill-question-text" class="text-base sm:text-lg font-bold text-slate-900">What kind of person is he?</p>
                 </div>
 
-                <!-- CỘT 2: KHU VỰC THỰC HÀNH & CHẤM ĐIỂM (5 cols) -->
-                <div class="md:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-6">
-                    <div class="text-center space-y-4">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Bản ghi phát âm phản xạ</span>
-                        
+                <!-- 2 & 3. MẪU CÂU & TỪ GỢI MỞ -->
+                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                    <div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Mẫu Câu Chuẩn (Pattern):</span>
+                        <p id="drill-pattern-text" class="text-sm font-bold text-indigo-600 font-mono">He is a/an [Adj] person who always [Verb].</p>
+                    </div>
+                    <div class="pt-2 flex items-center justify-between text-xs border-t border-slate-200/80">
+                        <span class="text-slate-500 font-semibold">Từ gợi mở (Cue word):</span>
+                        <span id="drill-cue-word" class="font-extrabold text-slate-800 bg-slate-200/80 px-2.5 py-0.5 rounded">Personality</span>
+                    </div>
+                </div>
+
+                <!-- 4. SUBSTITUTION WORD & DỊCH SUBSTITUTION WORD -->
+                <div class="p-3.5 bg-amber-50/90 border border-amber-200 rounded-xl space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-extrabold text-amber-900 uppercase tracking-wider">Substitution Word:</span>
+                        <span id="drill-sub-word" class="bg-amber-300 text-amber-950 px-3 py-1 rounded-lg text-sm font-black shadow-sm">kind</span>
+                    </div>
+                    <div id="drill-sub-dich-container" class="flex items-center justify-between text-xs pt-1 border-t border-amber-200/60">
+                        <span class="text-amber-800/80 font-medium">Dịch Substitution Word:</span>
+                        <span id="drill-sub-dich-word" class="font-extrabold text-amber-900 italic">tốt bụng</span>
+                    </div>
+                </div>
+
+                <!-- 5. TARGET DRILL & DỊCH SUBSTITUTION DRILLS (TỰ ĐỘNG HIỆN KHI ĐỘ KHỚP ≥ 50%) -->
+                <div id="drill-target-container" class="p-4 bg-emerald-50/90 border border-emerald-200 rounded-xl space-y-2.5 transition-all duration-300 hidden">
+                    <div class="flex items-center space-x-1.5 text-emerald-800 text-[11px] font-extrabold uppercase tracking-wider">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                        <span>Đáp Án Mục Tiêu & Bản Dịch (Unlocked ≥50%)</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold mb-0.5">Câu đáp án mục tiêu (Target Drill):</p>
+                        <p id="drill-target-sentence" class="text-sm sm:text-base font-bold text-slate-900 leading-snug">He is a kind person who always helps others.</p>
+                    </div>
+                    <div class="pt-1.5 border-t border-emerald-200/60">
+                        <p class="text-[10px] text-slate-400 uppercase font-bold mb-0.5">Dịch Substitution Drills:</p>
+                        <p id="drill-target-vietnamese" class="text-xs sm:text-sm font-medium text-slate-700 italic">Anh ấy là một người tốt bụng, luôn giúp đỡ người khác.</p>
+                    </div>
+                </div>
+
+                <!-- LOCKED HINT PLACEHOLDER WHEN NOT UNLOCKED -->
+                <div id="drill-locked-hint" class="p-3 border border-dashed border-slate-300 rounded-xl bg-slate-50 text-center">
+                    <p class="text-xs font-semibold text-slate-500 flex items-center justify-center space-x-1">
+                        <i data-lucide="lock" class="w-3.5 h-3.5 text-slate-400"></i>
+                        <span>Đọc phản xạ chính xác ≥ 50% để mở Đáp Án Mục Tiêu & Bản Dịch</span>
+                    </p>
+                </div>
+
+                <!-- PRACTICE AREA: SCORE & RECORDING -->
+                <div class="pt-2 space-y-3">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
                         <!-- SCORE DISPLAY RING -->
-                        <div class="relative flex items-center justify-center">
-                            <div id="drill-score-container" class="w-28 h-28 rounded-full border-8 border-slate-100 flex flex-col items-center justify-center transition-all duration-500">
-                                <span id="drill-score-val" class="text-2xl font-black text-slate-400">--%</span>
-                                <span id="drill-score-label" class="text-[10px] font-bold text-slate-400 uppercase">Độ khớp</span>
+                        <div class="flex items-center space-x-3">
+                            <div id="drill-score-container" class="w-16 h-16 rounded-full border-4 border-slate-200 flex flex-col items-center justify-center transition-all duration-300 shrink-0">
+                                <span id="drill-score-val" class="text-base font-black text-slate-400">--%</span>
+                            </div>
+                            <div>
+                                <p id="drill-score-label" class="text-xs font-bold text-slate-600 uppercase">Chưa phát âm</p>
+                                <p class="text-[11px] text-slate-400">Độ khớp $\ge 50\%$ sẽ tự hiện đáp án & chuyển!</p>
                             </div>
                         </div>
 
                         <!-- RECORD MIC BUTTON -->
-                        <div class="flex flex-col items-center justify-center space-y-2">
-                            <button id="drill-mic-btn" onclick="toggleRecording('substitution')" class="w-20 h-20 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-xl shadow-indigo-600/30 transition-all hover:scale-105 active:scale-95 group">
-                                <i id="drill-mic-icon" data-lucide="mic" class="w-10 h-10 group-hover:scale-110 transition-transform"></i>
+                        <div class="flex items-center space-x-2">
+                            <button id="drill-mic-btn" onclick="toggleRecording('substitution')" class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center space-x-2 shadow-md shadow-indigo-600/20 transition-all hover:scale-105 active:scale-95">
+                                <i id="drill-mic-icon" data-lucide="mic" class="w-5 h-5"></i>
+                                <span id="drill-mic-status">Nhấn để đọc phản xạ</span>
                             </button>
-                            <p id="drill-mic-status" class="text-xs font-semibold text-slate-500">Nhấn nút để bắt đầu đọc phản xạ</p>
                         </div>
                     </div>
 
-                    <!-- REALTIME RECOGNIZED TEXT DISPLAY -->
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
-                        <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase">
+                    <!-- RECOGNIZED TRANSCRIPT DISPLAY -->
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-left">
+                        <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase mb-1">
                             <span>Vừa nghe nhận được:</span>
-                            <span id="drill-live-tag" class="text-indigo-600 hidden">Đang nhận diện...</span>
+                            <span id="drill-live-tag" class="text-indigo-600 hidden">Đang thu âm...</span>
                         </div>
-                        <p id="drill-transcript-text" class="text-sm font-medium text-slate-700 min-h-[48px] italic">
-                            Hãy nói rõ câu trả lời tiếng Anh dựa trên mẫu câu và từ gợi ý...
+                        <p id="drill-transcript-text" class="text-xs sm:text-sm text-slate-700 font-medium min-h-[32px] italic">
+                            Hãy đọc câu phản xạ tiếng Anh dựa trên từ thay thế...
                         </p>
-                    </div>
-
-                    <!-- STEPPERS & CONTROLS -->
-                    <div class="flex items-center justify-between pt-2 border-t border-slate-100">
-                        <button onclick="navigateDrill(-1)" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center space-x-1 transition">
-                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                            <span>Câu trước</span>
-                        </button>
-                        <span id="drill-step-indicator" class="text-xs font-bold text-slate-500">1 / 5</span>
-                        <button onclick="navigateDrill(1)" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center space-x-1 shadow-md shadow-indigo-500/20 transition">
-                            <span>Câu kế tiếp</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                        </button>
                     </div>
                 </div>
 
-                <!-- CỘT 3: DANH SÁCH MA TRẬN THAY THẾ CHỦ ĐỀ (3 cols) -->
-                <div class="md:col-span-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="font-bold text-sm text-slate-800">Mẫu Câu Hiện Tại</h3>
-                            <span id="matrix-pattern-count" class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Mẫu 1/1</span>
-                        </div>
-                        <p class="text-xs text-slate-500 mb-3">Các từ thay thế trong mẫu câu này:</p>
-                        
-                        <!-- LIST OF DRILLS IN CURRENT PATTERN -->
-                        <div id="drill-matrix-list" class="space-y-2 max-h-[260px] overflow-y-auto pr-1">
-                            <!-- Items populated dynamically via JS -->
-                        </div>
-
-                        <!-- TOPIC PATTERNS PREVIEW LIST -->
-                        <div class="mt-4 pt-3 border-t border-slate-100 space-y-2">
-                            <p class="text-[11px] font-bold text-slate-500 uppercase">Mẫu câu trong Chủ đề này:</p>
-                            <div id="topic-patterns-list" class="space-y-1.5 max-h-[120px] overflow-y-auto">
-                                <!-- Patterns populated dynamically -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-3 border-t border-slate-100">
-                        <div class="p-3 bg-teal-50 rounded-xl text-center space-y-1">
-                            <p class="text-[11px] font-bold text-teal-900">Tính năng thông minh:</p>
-                            <p class="text-[11px] text-teal-700">Đạt độ khớp $\ge 80\%$ sẽ tự động đọc câu đúng và chuyển sang câu/mẫu câu tiếp theo!</p>
-                        </div>
-                    </div>
+                <!-- STEPPERS & CONTROLS -->
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                    <button onclick="navigateDrill(-1)" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center space-x-1 transition">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        <span>Câu trước</span>
+                    </button>
+                    <span id="drill-step-indicator" class="text-xs font-black text-slate-600">Mẫu 1/1 • Drill 1/5</span>
+                    <button onclick="navigateDrill(1)" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center space-x-1 shadow-md shadow-indigo-500/20 transition">
+                        <span>Câu kế tiếp</span>
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
                 </div>
 
             </div>
@@ -345,7 +316,7 @@
                             </h2>
                             <p class="text-xs text-slate-500">Nạp file bài tập (.xlsx, .xls, .csv) với đầy đủ các cột Mẫu câu, Câu hỏi & Substitution Drills</p>
                         </div>
-                        <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-full">Excel Engine v0.18</span>
+                        <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-full">Excel Engine v0.19</span>
                     </div>
 
                     <!-- DRAG & DROP AREA -->
@@ -361,7 +332,7 @@
                     </div>
 
                     <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-                        <span>Cột bắt buộc trong Excel: <strong class="text-slate-700">Chủ đề, Mẫu câu, Từ gợi mở, Câu hỏi cho mẫu câu, Substitution words, Substitution Drills, Dịch Substitution Drills</strong></span>
+                        <span>Cột trong Excel: <strong class="text-slate-700">Chủ đề, Mẫu câu, Từ gợi mở, Câu hỏi cho mẫu câu, Substitution words, Dịch Substitution words, Substitution Drills, Dịch Substitution Drills</strong></span>
                     </div>
                 </div>
 
@@ -391,7 +362,7 @@
 
             </div>
 
-            <!-- DATA GRID PREVIEW TABLE (DANH SÁCH BẢNG DỮ LIỆU ĐÃ NẠP) -->
+            <!-- DATA GRID PREVIEW TABLE -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -429,7 +400,7 @@
     <!-- FOOTER STATUS BAR -->
     <footer class="bg-slate-900 text-slate-400 text-xs py-3 border-t border-slate-800 mt-auto">
         <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-between gap-2">
-            <span>EngSpur Reflex Engine v2.8 • Auto-TTS & Pattern Transition Active</span>
+            <span>EngSpur Reflex Engine v2.9 • Auto-Saved State Enabled (≥50% Auto-Next)</span>
             <span>Giọng nhận diện: SpeechRecognition (en-US)</span>
         </div>
     </footer>
@@ -462,6 +433,7 @@
             cueWord: "Personality",
             question: "What kind of person is he?",
             substitutionWords: ["kind", "generous", "energetic", "patient", "hardworking"],
+            dichWords: ["tốt bụng", "hào phóng", "năng động", "kiên nhẫn", "chăm chỉ"],
             substitutionDrills: [
                 "He is a kind person who always helps others.",
                 "He is a generous person who always shares food.",
@@ -485,6 +457,7 @@
             cueWord: "Appearance & Actions",
             question: "How does he look?",
             substitutionWords: ["friendly", "confident", "cheerful"],
+            dichWords: ["thân thiện", "tự tin", "vui vẻ"],
             substitutionDrills: [
                 "He looks friendly when he smiles at everyone.",
                 "He looks confident when he gives a presentation.",
@@ -504,6 +477,7 @@
             cueWord: "Atmosphere",
             question: "What kind of place is it?",
             substitutionWords: ["peaceful", "crowded", "modern"],
+            dichWords: ["yên bình", "đông đúc", "hiện đại"],
             substitutionDrills: [
                 "It is a peaceful place where people often relax.",
                 "It is a crowded place where people often shop.",
@@ -516,32 +490,87 @@
             ]
         };
 
-        // GLOBAL DATA STORES
         let importedDatasets = [ sampleDataset1, sampleDataset2, sampleDataset3 ];
         let selectedTopic = "Describe Person";
-        let currentTopicDatasets = []; // All patterns belonging to current selected topic
-        let currentPatternIndex = 0;   // Index of active pattern inside current topic
-        let currentDrillIndex = 0;     // Index of active drill inside current pattern
+        let currentTopicDatasets = []; // All patterns belonging to active topic
+        let currentPatternIndex = 0;   // Index of active pattern in topic
+        let currentDrillIndex = 0;     // Index of active drill in pattern
         let currentDrillData = sampleDataset1;
 
-        // Map to persist scores per dataset/pattern: { [ds.id]: [scores...] }
+        // Scores persistence map: { [ds.id]: [scores...] }
         let datasetScoresMap = {};
 
         let isRecording = false;
         let recognition = null;
         let autoNextTimeout = null;
 
-        // INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             initSpeechRecognition();
             updateTopicDropdown();
-            selectTopicAndInitialize(selectedTopic);
+
+            // Load saved state from LocalStorage if available
+            const hasRestored = loadProgressFromLocalStorage();
+            if (!hasRestored) {
+                selectTopicAndInitialize(selectedTopic);
+            } else {
+                renderSubstitutionModule();
+            }
+
             renderDatasetTable();
             setupDragAndDrop();
         });
 
-        // TOAST NOTIFICATION UTILITY
+        // LOCALSTORAGE PERSISTENCE ENGINE
+        function saveProgressToLocalStorage() {
+            const state = {
+                selectedTopic: selectedTopic,
+                currentPatternIndex: currentPatternIndex,
+                currentDrillIndex: currentDrillIndex,
+                datasetScoresMap: datasetScoresMap
+            };
+            try {
+                localStorage.setItem('engspur_reflex_progress', JSON.stringify(state));
+            } catch (e) {
+                console.error("Failed to save progress to LocalStorage", e);
+            }
+        }
+
+        function loadProgressFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem('engspur_reflex_progress');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    if (state.datasetScoresMap) datasetScoresMap = state.datasetScoresMap;
+
+                    if (state.selectedTopic && importedDatasets.some(ds => ds.topic.toLowerCase() === state.selectedTopic.toLowerCase())) {
+                        selectedTopic = state.selectedTopic;
+                        currentTopicDatasets = importedDatasets.filter(ds => ds.topic.toLowerCase() === selectedTopic.toLowerCase());
+
+                        if (state.currentPatternIndex !== undefined && state.currentPatternIndex < currentTopicDatasets.length) {
+                            currentPatternIndex = state.currentPatternIndex;
+                        } else {
+                            currentPatternIndex = 0;
+                        }
+
+                        currentDrillData = currentTopicDatasets[currentPatternIndex];
+
+                        if (state.currentDrillIndex !== undefined && state.currentDrillIndex < currentDrillData.substitutionWords.length) {
+                            currentDrillIndex = state.currentDrillIndex;
+                        } else {
+                            currentDrillIndex = 0;
+                        }
+
+                        updateTopicDropdown();
+                        return true;
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to load progress from LocalStorage", e);
+            }
+            return false;
+        }
+
         function showToast(message, type = "success") {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -550,7 +579,7 @@
 
             toast.className = `flex items-center space-x-2 px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold pointer-events-auto transition-all transform translate-y-2 opacity-0 ${bgClass}`;
             toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i><span>${message}</span>`;
-            
+
             container.appendChild(toast);
             lucide.createIcons();
 
@@ -564,7 +593,6 @@
             }, 3500);
         }
 
-        // TAB SWITCHING LOGIC
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`tab-${tabName}`).classList.remove('hidden');
@@ -574,22 +602,21 @@
             const btnData = document.getElementById('tab-data-btn');
 
             [btnMonologue, btnSub, btnData].forEach(btn => {
-                btn.className = "px-4 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-2";
+                btn.className = "px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-1.5 whitespace-nowrap";
             });
 
             if (tabName === 'monologue') {
-                btnMonologue.className = "px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-2 bg-indigo-600 text-white shadow-sm";
+                btnMonologue.className = "px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap bg-indigo-600 text-white shadow-sm";
             } else if (tabName === 'substitution') {
-                btnSub.className = "px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-2 bg-teal-600 text-white shadow-sm";
+                btnSub.className = "px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap bg-teal-600 text-white shadow-sm";
                 if (document.getElementById('auto-tts-question-toggle').checked) {
                     setTimeout(() => speakText(currentDrillData.question), 300);
                 }
             } else if (tabName === 'data') {
-                btnData.className = "px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-2 bg-indigo-600 text-white shadow-sm";
+                btnData.className = "px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap bg-indigo-600 text-white shadow-sm";
             }
         }
 
-        // UPDATE TOPIC DROPDOWN ACCORDING TO IMPORTED DATASETS
         function updateTopicDropdown() {
             const select = document.getElementById('topic-select');
             if (!select) return;
@@ -606,20 +633,39 @@
                 const option = document.createElement('option');
                 option.value = topicName;
                 option.textContent = topicName;
-                if (selectedTopic === topicName) {
+                if (selectedTopic.toLowerCase() === topicName.toLowerCase()) {
                     option.selected = true;
                 }
                 select.appendChild(option);
             });
+
+            updatePatternDropdown();
         }
 
-        // SELECT TOPIC & INITIALIZE PATTERNS SEQUENTIALLY
+        function updatePatternDropdown() {
+            const patternSelect = document.getElementById('pattern-select');
+            if (!patternSelect) return;
+            patternSelect.innerHTML = '';
+
+            currentTopicDatasets = importedDatasets.filter(ds => ds.topic.toLowerCase() === selectedTopic.toLowerCase());
+            if (currentTopicDatasets.length === 0) currentTopicDatasets = [ sampleDataset1 ];
+
+            currentTopicDatasets.forEach((ds, pIdx) => {
+                const option = document.createElement('option');
+                option.value = pIdx;
+                option.textContent = `Mẫu ${pIdx + 1}: ${ds.pattern}`;
+                if (pIdx === currentPatternIndex) {
+                    option.selected = true;
+                }
+                patternSelect.appendChild(option);
+            });
+        }
+
         function selectTopicAndInitialize(topicName) {
             selectedTopic = topicName;
             currentTopicDatasets = importedDatasets.filter(ds => ds.topic.toLowerCase() === topicName.toLowerCase());
 
             if (currentTopicDatasets.length === 0) {
-                // Fallback if no datasets found
                 currentTopicDatasets = [ sampleDataset1 ];
             }
 
@@ -627,32 +673,50 @@
             currentDrillIndex = 0;
             currentDrillData = currentTopicDatasets[0];
 
+            updatePatternDropdown();
             renderSubstitutionModule();
+            saveProgressToLocalStorage();
         }
 
-        // RENDER SUBSTITUTION DRILL MODULE UI
+        function changePatternSelect(pIdx) {
+            clearTimeout(autoNextTimeout);
+            if (pIdx >= 0 && pIdx < currentTopicDatasets.length) {
+                currentPatternIndex = pIdx;
+                currentDrillIndex = 0;
+                currentDrillData = currentTopicDatasets[currentPatternIndex];
+                renderSubstitutionModule();
+                saveProgressToLocalStorage();
+                if (document.getElementById('auto-tts-question-toggle').checked) {
+                    speakText(currentDrillData.question);
+                }
+            }
+        }
+
         function renderSubstitutionModule() {
-            document.getElementById('drill-topic-badge').innerText = `Chủ đề: ${currentDrillData.topic}`;
+            // Update Active Pattern Badge in Toolbar
+            const totalPatterns = currentTopicDatasets.length;
+            document.getElementById('active-pattern-text').innerText = `Mẫu ${currentPatternIndex + 1}/${totalPatterns}: ${currentDrillData.pattern}`;
+            document.getElementById('active-drill-count').innerText = `${currentDrillData.substitutionWords.length} Drills`;
+
+            // Sequence 1: Câu hỏi cho mẫu câu
             document.getElementById('drill-question-text').innerText = currentDrillData.question;
+            
+            // Sequence 2 & 3: Mẫu câu & Từ gợi mở
             document.getElementById('drill-pattern-text').innerText = currentDrillData.pattern;
             document.getElementById('drill-cue-word').innerText = currentDrillData.cueWord;
 
-            const totalPatterns = currentTopicDatasets.length;
-            const patternBadgeText = `Mẫu ${currentPatternIndex + 1}/${totalPatterns}`;
-            document.getElementById('pattern-index-badge').innerText = patternBadgeText;
-            document.getElementById('matrix-pattern-count').innerText = patternBadgeText;
-
+            // Sequence 4: Substitution word & Dịch substitution word
             const currentWord = currentDrillData.substitutionWords[currentDrillIndex] || "";
+            const currentDichWord = (currentDrillData.dichWords && currentDrillData.dichWords[currentDrillIndex]) ? currentDrillData.dichWords[currentDrillIndex] : "---";
             const currentTarget = currentDrillData.substitutionDrills[currentDrillIndex] || "";
             const currentVietnamese = currentDrillData.dichDrills[currentDrillIndex] || "";
 
             document.getElementById('drill-sub-word').innerText = currentWord;
+            document.getElementById('drill-sub-dich-word').innerText = currentDichWord;
             document.getElementById('drill-target-sentence').innerText = currentTarget;
             document.getElementById('drill-target-vietnamese').innerText = currentVietnamese;
 
-            const progressString = `Mẫu ${currentPatternIndex + 1}/${totalPatterns} • Câu ${currentDrillIndex + 1}/${currentDrillData.substitutionWords.length}`;
-            document.getElementById('drill-progress-text').innerText = progressString;
-            document.getElementById('drill-step-indicator').innerText = `${currentDrillIndex + 1} / ${currentDrillData.substitutionWords.length}`;
+            document.getElementById('drill-step-indicator').innerText = `Mẫu ${currentPatternIndex + 1}/${totalPatterns} • Drill ${currentDrillIndex + 1}/${currentDrillData.substitutionWords.length}`;
 
             // Ensure scores array exists for current pattern
             if (!datasetScoresMap[currentDrillData.id]) {
@@ -660,117 +724,66 @@
             }
 
             const activeScores = datasetScoresMap[currentDrillData.id];
-            updateScoreDisplay(activeScores[currentDrillIndex]);
+            const currentScore = activeScores[currentDrillIndex];
 
-            // Render Matrix List Side for Current Pattern
-            const matrixContainer = document.getElementById('drill-matrix-list');
-            matrixContainer.innerHTML = '';
-            currentDrillData.substitutionWords.forEach((word, idx) => {
-                const isSelected = idx === currentDrillIndex;
-                const score = activeScores[idx];
-                const itemEl = document.createElement('div');
-                itemEl.onclick = () => jumpToDrill(idx);
-                itemEl.className = `p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                    isSelected ? 'bg-teal-50 border-teal-500 ring-2 ring-teal-500/20' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                }`;
-                itemEl.innerHTML = `
-                    <div>
-                        <p class="text-xs font-bold ${isSelected ? 'text-teal-900' : 'text-slate-700'}">${idx + 1}. ${word}</p>
-                        <p class="text-[10px] text-slate-500 truncate max-w-[130px]">${currentDrillData.substitutionDrills[idx]}</p>
-                    </div>
-                    <span class="text-[11px] font-extrabold px-2 py-0.5 rounded ${
-                        score !== null ? (score >= 80 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700') : 'bg-slate-200 text-slate-500'
-                    }">
-                        ${score !== null ? score + '%' : '--'}
-                    </span>
-                `;
-                matrixContainer.appendChild(itemEl);
-            });
+            // Auto reveal Target & Translation if completed or score >= 50%
+            const targetContainer = document.getElementById('drill-target-container');
+            const lockedHint = document.getElementById('drill-locked-hint');
 
-            // Render Topic Patterns List (allows quick switching between patterns in current topic)
-            const topicPatternsContainer = document.getElementById('topic-patterns-list');
-            topicPatternsContainer.innerHTML = '';
-            currentTopicDatasets.forEach((ds, pIdx) => {
-                const isCurrentPattern = pIdx === currentPatternIndex;
-                const pBtn = document.createElement('div');
-                pBtn.onclick = () => jumpToPattern(pIdx);
-                pBtn.className = `p-2 rounded-lg text-xs border flex items-center justify-between cursor-pointer transition-all ${
-                    isCurrentPattern ? 'bg-indigo-600 text-white font-bold border-indigo-600 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                }`;
-                pBtn.innerHTML = `
-                    <span class="truncate max-w-[150px]">Mẫu ${pIdx + 1}: ${ds.pattern}</span>
-                    <span class="text-[10px] px-1.5 py-0.2 rounded ${isCurrentPattern ? 'bg-indigo-700 text-white' : 'bg-slate-200 text-slate-600'}">${ds.substitutionWords.length} drills</span>
-                `;
-                topicPatternsContainer.appendChild(pBtn);
-            });
+            if (currentScore !== null && currentScore >= 50) {
+                targetContainer.classList.remove('hidden');
+                lockedHint.classList.add('hidden');
+            } else {
+                targetContainer.classList.add('hidden');
+                lockedHint.classList.remove('hidden');
+            }
+
+            updateScoreDisplay(currentScore);
 
             window.currentDrillItem = {
                 word: currentWord,
+                dichWord: currentDichWord,
                 targetSentence: currentTarget,
                 vietnamese: currentVietnamese
             };
+            lucide.createIcons();
         }
 
-        // STEPPER CONTROL (Di chuyển theo thứ tự trong Mẫu câu và Tự động chuyển Mẫu câu mới khi hết)
         function navigateDrill(direction) {
             clearTimeout(autoNextTimeout);
-
             let nextDrillIdx = currentDrillIndex + direction;
 
             if (nextDrillIdx >= 0 && nextDrillIdx < currentDrillData.substitutionWords.length) {
-                // Next drill within the same pattern
                 currentDrillIndex = nextDrillIdx;
-                renderSubstitutionModule();
-                if (document.getElementById('auto-tts-question-toggle').checked) {
-                    speakText(currentDrillData.question);
+            } else if (direction > 0 && nextDrillIdx >= currentDrillData.substitutionWords.length) {
+                // Advance to Next Pattern in topic when all drills completed
+                if (currentPatternIndex < currentTopicDatasets.length - 1) {
+                    currentPatternIndex++;
+                    currentDrillIndex = 0;
+                    currentDrillData = currentTopicDatasets[currentPatternIndex];
+                    updatePatternDropdown();
+                    showToast(`Chuyển sang Mẫu câu mới (${currentPatternIndex + 1}/${currentTopicDatasets.length})!`);
+                } else {
+                    showToast("Bạn đã hoàn thành tất cả Mẫu câu trong Chủ đề này!", "success");
+                    currentDrillIndex = 0;
                 }
-            } else if (direction > 0 && currentPatternIndex + 1 < currentTopicDatasets.length) {
-                // Reached end of current pattern -> Transition to Next Pattern in Topic
-                currentPatternIndex++;
-                currentDrillIndex = 0;
-                currentDrillData = currentTopicDatasets[currentPatternIndex];
-                renderSubstitutionModule();
-                showToast(`Chuyển sang Mẫu câu ${currentPatternIndex + 1}/${currentTopicDatasets.length}: "${currentDrillData.pattern}"`);
-                if (document.getElementById('auto-tts-question-toggle').checked) {
-                    speakText(currentDrillData.question);
+            } else if (direction < 0 && nextDrillIdx < 0) {
+                if (currentPatternIndex > 0) {
+                    currentPatternIndex--;
+                    currentDrillData = currentTopicDatasets[currentPatternIndex];
+                    currentDrillIndex = currentDrillData.substitutionWords.length - 1;
+                    updatePatternDropdown();
                 }
-            } else if (direction < 0 && currentPatternIndex - 1 >= 0) {
-                // Previous pattern
-                currentPatternIndex--;
-                currentDrillData = currentTopicDatasets[currentPatternIndex];
-                currentDrillIndex = currentDrillData.substitutionWords.length - 1;
-                renderSubstitutionModule();
-                if (document.getElementById('auto-tts-question-toggle').checked) {
-                    speakText(currentDrillData.question);
-                }
-            } else if (direction > 0 && currentPatternIndex + 1 >= currentTopicDatasets.length) {
-                showToast(`Bạn đã hoàn thành tất cả Mẫu câu trong chủ đề "${selectedTopic}"! 🎉`);
             }
-        }
 
-        function jumpToDrill(idx) {
-            clearTimeout(autoNextTimeout);
-            currentDrillIndex = idx;
             renderSubstitutionModule();
+            saveProgressToLocalStorage();
+
             if (document.getElementById('auto-tts-question-toggle').checked) {
                 speakText(currentDrillData.question);
             }
         }
 
-        function jumpToPattern(patternIdx) {
-            clearTimeout(autoNextTimeout);
-            if (patternIdx >= 0 && patternIdx < currentTopicDatasets.length) {
-                currentPatternIndex = patternIdx;
-                currentDrillIndex = 0;
-                currentDrillData = currentTopicDatasets[currentPatternIndex];
-                renderSubstitutionModule();
-                if (document.getElementById('auto-tts-question-toggle').checked) {
-                    speakText(currentDrillData.question);
-                }
-            }
-        }
-
-        // TEXT TO SPEECH (TTS) ENGINE
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -781,7 +794,6 @@
             }
         }
 
-        // SPEECH RECOGNITION (STT) ENGINE
         function initSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
@@ -844,19 +856,16 @@
             const liveTag = document.getElementById('drill-live-tag');
 
             if (active) {
-                micBtn.className = "w-20 h-20 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-xl shadow-emerald-500/40 animate-pulse-slow transition-all";
-                micStatus.innerText = "Đang lắng nghe... Hãy đọc câu đáp án!";
-                micStatus.className = "text-xs font-bold text-emerald-600";
+                micBtn.className = "px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center space-x-2 shadow-md shadow-emerald-500/30 animate-pulse-slow transition-all";
+                micStatus.innerText = "Đang thu âm...";
                 liveTag.classList.remove('hidden');
             } else {
-                micBtn.className = "w-20 h-20 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-xl shadow-indigo-600/30 transition-all hover:scale-105 active:scale-95 group";
-                micStatus.innerText = "Nhấn nút để bắt đầu đọc phản xạ";
-                micStatus.className = "text-xs font-semibold text-slate-500";
+                micBtn.className = "px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center space-x-2 shadow-md shadow-indigo-600/20 transition-all hover:scale-105 active:scale-95";
+                micStatus.innerText = "Nhấn để đọc phản xạ";
                 liveTag.classList.add('hidden');
             }
         }
 
-        // EVALUATE SPEECH SCORE & AUTO READ STANDARD ANSWER
         function evaluateSpeechScore(spoken, target) {
             if (!target) return;
             const cleanSpoken = spoken.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
@@ -879,10 +888,13 @@
             datasetScoresMap[currentDrillData.id][currentDrillIndex] = similarity;
 
             updateScoreDisplay(similarity);
-            renderSubstitutionModule();
+            saveProgressToLocalStorage();
 
-            // YÊU CẦU 1: Khi độ khớp đủ (>= 80%), tự động phát âm câu đúng mẫu chuẩn
-            if (similarity >= 80) {
+            // REQUIREMENT: Khi độ khớp đủ 50%, tự động hiện Target Drill & Bản dịch, đọc Target Drill và chuyển sang câu/Mẫu câu mới
+            if (similarity >= 50) {
+                document.getElementById('drill-target-container').classList.remove('hidden');
+                document.getElementById('drill-locked-hint').classList.add('hidden');
+
                 if (recognition && isRecording) {
                     recognition.stop();
                     isRecording = false;
@@ -894,11 +906,11 @@
                     speakText(target);
                 }, 200);
 
-                // YÊU CẦU 2: Tự động chuyển câu hoặc chuyển sang Mẫu câu mới sau khi hoàn tất
+                // Tự động chuyển câu hoặc chuyển Mẫu câu mới
                 if (document.getElementById('auto-next-toggle').checked) {
                     autoNextTimeout = setTimeout(() => {
                         navigateDrill(1);
-                    }, 2500);
+                    }, 2400);
                 }
             }
         }
@@ -910,24 +922,19 @@
 
             if (score === null) {
                 scoreVal.innerText = "--%";
-                scoreVal.className = "text-2xl font-black text-slate-400";
-                scoreLabel.innerText = "Độ khớp";
-                container.className = "w-28 h-28 rounded-full border-8 border-slate-100 flex flex-col items-center justify-center transition-all duration-500";
-            } else if (score >= 80) {
-                scoreVal.innerText = `${score}%`;
-                scoreVal.className = "text-2xl font-black text-emerald-600";
-                scoreLabel.innerText = "Xuất sắc!";
-                container.className = "w-28 h-28 rounded-full border-8 border-emerald-500 bg-emerald-50 flex flex-col items-center justify-center transition-all duration-500";
+                scoreVal.className = "text-base font-black text-slate-400";
+                scoreLabel.innerText = "Chưa phát âm";
+                container.className = "w-16 h-16 rounded-full border-4 border-slate-200 flex flex-col items-center justify-center transition-all duration-300 shrink-0";
             } else if (score >= 50) {
                 scoreVal.innerText = `${score}%`;
-                scoreVal.className = "text-2xl font-black text-amber-600";
-                scoreLabel.innerText = "Khá tốt";
-                container.className = "w-28 h-28 rounded-full border-8 border-amber-400 bg-amber-50 flex flex-col items-center justify-center transition-all duration-500";
+                scoreVal.className = "text-base font-black text-emerald-600";
+                scoreLabel.innerText = "Đạt yêu cầu!";
+                container.className = "w-16 h-16 rounded-full border-4 border-emerald-500 bg-emerald-50 flex flex-col items-center justify-center transition-all duration-300 shrink-0";
             } else {
                 scoreVal.innerText = `${score}%`;
-                scoreVal.className = "text-2xl font-black text-rose-600";
+                scoreVal.className = "text-base font-black text-rose-600";
                 scoreLabel.innerText = "Thử lại";
-                container.className = "w-28 h-28 rounded-full border-8 border-rose-400 bg-rose-50 flex flex-col items-center justify-center transition-all duration-500";
+                container.className = "w-16 h-16 rounded-full border-4 border-rose-400 bg-rose-50 flex flex-col items-center justify-center transition-all duration-300 shrink-0";
             }
         }
 
@@ -938,15 +945,13 @@
             }
         }
 
-        // CHỌN CHỦ ĐỀ VÀ KÍCH HOẠT TẬP TUẦN TỰ
         function changeTopic(val) {
             selectTopicAndInitialize(val);
             renderDatasetTable();
-            showToast(`Đã chọn chủ đề: "${val}" (${currentTopicDatasets.length} mẫu câu)`);
+            showToast(`Đã chọn chủ đề: "${val}"`);
             switchTab('substitution');
         }
 
-        // EXCEL IMPORT PROCESSING ENGINE
         function handleExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -975,7 +980,6 @@
             event.target.value = '';
         }
 
-        // PARSE EXCEL ROWS INTO DATASETS
         function processImportedExcelRows(rows) {
             let parsedCount = 0;
             let importedTopics = [];
@@ -987,10 +991,12 @@
                 const question = row["Câu hỏi cho mẫu câu"] || row["Question"] || "";
 
                 let subWordsRaw = row["Substitution words"] || row["SubstitutionWords"] || [];
+                let dichWordsRaw = row["Dịch Substitution words"] || row["DichSubstitutionWords"] || [];
                 let drillsRaw = row["Substitution Drills"] || row["SubstitutionDrills"] || [];
                 let dichRaw = row["Dịch Substitution Drills"] || row["DichDrills"] || [];
 
                 const subWords = parseArrayField(subWordsRaw);
+                const dichWords = parseArrayField(dichWordsRaw);
                 const drills = parseArrayField(drillsRaw);
                 const dich = parseArrayField(dichRaw);
 
@@ -1002,6 +1008,7 @@
                         cueWord: cueWord,
                         question: question,
                         substitutionWords: subWords.length > 0 ? subWords : drills.map((_, i) => `Word ${i+1}`),
+                        dichWords: dichWords.length === subWords.length ? dichWords : subWords.map(() => "---"),
                         substitutionDrills: drills,
                         dichDrills: dich.length === drills.length ? dich : drills.map(() => "Bản dịch chưa cập nhật")
                     };
@@ -1038,7 +1045,6 @@
             return [];
         }
 
-        // RENDER DATASET PREVIEW TABLE
         function renderDatasetTable() {
             const tableBody = document.getElementById('dataset-table-body');
             document.getElementById('data-count-badge').innerText = `${importedDatasets.length} Bộ bài tập`;
@@ -1086,6 +1092,7 @@
                 updateTopicDropdown();
                 renderSubstitutionModule();
                 renderDatasetTable();
+                saveProgressToLocalStorage();
                 showToast(`Kích hoạt bài tập: "${currentDrillData.pattern}"`);
                 switchTab('substitution');
             }
@@ -1099,6 +1106,7 @@
                     "Từ gợi mở": "Personality",
                     "Câu hỏi cho mẫu câu": "What kind of person is he?",
                     "Substitution words": '["kind", "generous", "energetic", "patient", "hardworking"]',
+                    "Dịch Substitution words": '["tốt bụng", "hào phóng", "năng động", "kiên nhẫn", "chăm chỉ"]',
                     "Substitution Drills": '["He is a kind person who always helps others.", "He is a generous person who always shares food.", "He is an energetic person who always exercises.", "He is a patient person who always listens.", "He is a hardworking person who always stays late."]',
                     "Dịch Substitution Drills": '["Anh ấy là một người tốt bụng, luôn giúp đỡ người khác.", "Anh ấy là một người hào phóng, luôn chia sẻ thức ăn.", "Anh ấy là một người năng động, luôn tập thể dục.", "Anh ấy là một người kiên nhẫn, luôn lắng nghe.", "Anh ấy là một người chăm chỉ, luôn ở lại làm muộn."]'
                 },
@@ -1108,6 +1116,7 @@
                     "Từ gợi mở": "Appearance & Actions",
                     "Câu hỏi cho mẫu câu": "How does he look?",
                     "Substitution words": '["friendly", "confident", "cheerful"]',
+                    "Dịch Substitution words": '["thân thiện", "tự tin", "vui vẻ"]',
                     "Substitution Drills": '["He looks friendly when he smiles at everyone.", "He looks confident when he gives a presentation.", "He looks cheerful when he talks about his hobbies."]',
                     "Dịch Substitution Drills": '["Anh ấy trông thân thiện khi mỉm cười với mọi người.", "Anh ấy trông tự tin khi thuyết trình.", "Anh ấy trông vui vẻ khi nói về sở thích của mình."]'
                 }
