@@ -39,7 +39,7 @@
     <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none max-w-xs w-full"></div>
 
-    <!-- RESPONSIVE APP CONTAINER (HOÀN HẢO CHO CẢ MOBILE LẪN PC) -->
+    <!-- RESPONSIVE APP CONTAINER (MÔ PHỎNG MOBILE & PC TƯƠNG THÍCH) -->
     <div class="max-w-md sm:max-w-lg md:max-w-xl w-full min-h-screen sm:min-h-[840px] sm:max-h-[920px] bg-slate-900 text-slate-100 flex flex-col sm:rounded-3xl sm:border sm:border-slate-800 relative shadow-2xl overflow-hidden">
 
         <!-- MOBILE & PC APP HEADER -->
@@ -69,7 +69,7 @@
                 <div>
                     <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Chủ đề:</label>
                     <select id="topic-select" onchange="changeTopic(this.value)" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full truncate cursor-pointer">
-                        <!-- Populated dynamically -->
+                        <!-- Nạp danh mục động -->
                     </select>
                 </div>
 
@@ -77,12 +77,12 @@
                 <div>
                     <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Mẫu câu trong bài:</label>
                     <select id="pattern-select" onchange="changePatternSelect(parseInt(this.value))" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full truncate cursor-pointer">
-                        <!-- Populated dynamically -->
+                        <!-- Nạp danh mục động -->
                     </select>
                 </div>
             </div>
 
-            <!-- SMART CONFIG TOGGLES (4 CÔNG TẮC CẤU HÌNH RẢNH TAY) -->
+            <!-- SMART CONFIG TOGGLES (CÔNG TẮC RẢNH TAY TỰ ĐỘNG) -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-slate-950/60 p-2 rounded-xl border border-slate-800/80">
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="keep-mic-toggle" class="sr-only peer" onchange="toggleKeepMic()">
@@ -90,7 +90,6 @@
                     <span class="ml-1 text-[10px] font-semibold text-slate-300">Giữ Mic</span>
                 </label>
 
-                <!-- MỚI: CÔNG TẮC TỰ BẬT MIC SAU KHI ĐỌC CÂU HỎI -->
                 <label class="inline-flex items-center cursor-pointer" title="Tự bật Micro thu âm ngay sau khi phát xong câu hỏi">
                     <input type="checkbox" id="auto-mic-toggle" checked class="sr-only peer" onchange="saveProgressToLocalStorage()">
                     <div class="w-7 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-600"></div>
@@ -114,7 +113,7 @@
         <!-- MAIN SCROLLABLE CONTENT AREA -->
         <main class="flex-grow overflow-y-auto p-3 sm:p-4 space-y-4 pb-20">
 
-            <!-- TAB 1: SUBSTITUTION DRILLS MODULE (LUYỆN TỪNG CÂU PHẢN XẠ) -->
+            <!-- TAB 1: SUBSTITUTION DRILLS MODULE (LUYỆN CÂU PHẢN XẠ) -->
             <div id="tab-substitution" class="tab-content space-y-3">
 
                 <!-- ACTIVE PATTERN INDICATOR -->
@@ -162,7 +161,7 @@
                     </div>
                 </div>
 
-                <!-- 5. TARGET DRILL & DỊCH (LOCKED / UNLOCKED ≥50%) -->
+                <!-- 5. TARGET DRILL & DỊCH (HIỆN KHI ĐẠT điểm ≥50%) -->
                 <div id="drill-target-container" class="p-3.5 bg-emerald-950/50 border border-emerald-800/60 rounded-2xl space-y-2 transition-all duration-300 hidden">
                     <div class="flex items-center space-x-1 text-emerald-400 text-[10px] font-black uppercase tracking-wider">
                         <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
@@ -266,7 +265,7 @@
                     </div>
                 </div>
 
-                <!-- 5. TARGET DRILL & DỊCH (LOCKED / UNLOCKED ≥50%) -->
+                <!-- 5. TARGET DRILL & DỊCH (UNLOCKED ≥50%) -->
                 <div id="full-target-container" class="p-3.5 bg-emerald-950/50 border border-emerald-800/60 rounded-2xl space-y-2 transition-all duration-300 hidden">
                     <div class="flex items-center space-x-1 text-emerald-400 text-[10px] font-black uppercase tracking-wider">
                         <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
@@ -746,7 +745,7 @@
 
             const uniqueTopics = [];
             importedDatasets.forEach(ds => {
-                if (!uniqueTopics.includes(ds.topic)) {
+                if (!uniqueTopics.some(t => t.toLowerCase() === ds.topic.toLowerCase())) {
                     uniqueTopics.push(ds.topic);
                 }
             });
@@ -814,7 +813,7 @@
             currentFullPatternIndex = 0;
             currentDrillData = currentTopicDatasets[0];
 
-            updatePatternDropdown();
+            updateTopicDropdown();
             renderSubstitutionModule();
             renderFullMonologueModule();
             saveProgressToLocalStorage();
@@ -968,10 +967,23 @@
                     playQuestionAndManageMic(currentFullDrillItem.question);
                 }
             } else if (nextIndex >= currentFullTopicDatasets.length) {
-                showToast(`Chúc mừng! Đã hoàn thành bài nói chủ đề "${selectedTopic}"!`, "success");
-                currentFullPatternIndex = 0;
-                renderFullMonologueModule();
-                saveProgressToLocalStorage();
+                // TỰ ĐỘNG CHUYỂN SANG CHỦ ĐỀ TIẾP THEO Ở MODE FULL MONOLOGUE
+                const uniqueTopics = [];
+                importedDatasets.forEach(ds => {
+                    if (!uniqueTopics.some(t => t.toLowerCase() === ds.topic.toLowerCase())) {
+                        uniqueTopics.push(ds.topic);
+                    }
+                });
+                const currentTopicIdx = uniqueTopics.findIndex(t => t.toLowerCase() === selectedTopic.toLowerCase());
+                if (currentTopicIdx !== -1 && currentTopicIdx < uniqueTopics.length - 1) {
+                    const nextTopic = uniqueTopics[currentTopicIdx + 1];
+                    selectTopicAndInitialize(nextTopic);
+                    showToast(`Hoàn thành bài nói chủ đề "${selectedTopic}"! Chuyển sang chủ đề: "${nextTopic}"`, "success");
+                } else if (uniqueTopics.length > 0) {
+                    const firstTopic = uniqueTopics[0];
+                    selectTopicAndInitialize(firstTopic);
+                    showToast(`Đã hoàn tất tất cả Chủ đề! Quay lại chủ đề đầu tiên: "${firstTopic}"`, "success");
+                }
             }
         }
 
@@ -985,6 +997,7 @@
             }
         }
 
+        // YÊU CẦU 1: CHUYỂN MẪU CÂU & CHUYỂN CHỦ ĐỀ TỰ ĐỘNG KHI HẾT MẪU CÂU TRONG CHỦ ĐỀ
         function navigateDrill(direction) {
             if (!currentDrillData) return;
             clearTimeout(autoNextTimeout);
@@ -993,6 +1006,7 @@
             if (nextDrillIdx >= 0 && nextDrillIdx < currentDrillData.substitutionWords.length) {
                 currentDrillIndex = nextDrillIdx;
             } else if (direction > 0 && nextDrillIdx >= currentDrillData.substitutionWords.length) {
+                // Đã đọc xong tất cả các Drills trong Mẫu câu hiện tại -> Chuyển Mẫu câu tiếp theo
                 if (currentPatternIndex < currentTopicDatasets.length - 1) {
                     currentPatternIndex++;
                     currentDrillIndex = 0;
@@ -1000,8 +1014,29 @@
                     updatePatternDropdown();
                     showToast(`Sang Mẫu câu mới (${currentPatternIndex + 1}/${currentTopicDatasets.length})!`);
                 } else {
-                    showToast("Đã hoàn thành tất cả Mẫu câu!", "success");
-                    currentDrillIndex = 0;
+                    // ĐÃ ĐỌC HẾT TẤT CẢ MẪU CÂU TRONG CHỦ ĐỀ HIỆN TẠI -> TỰ ĐỘNG CHUYỂN SANG CHỦ ĐỀ TIẾP THEO
+                    const uniqueTopics = [];
+                    importedDatasets.forEach(ds => {
+                        if (!uniqueTopics.some(t => t.toLowerCase() === ds.topic.toLowerCase())) {
+                            uniqueTopics.push(ds.topic);
+                        }
+                    });
+
+                    const currentTopicIdx = uniqueTopics.findIndex(t => t.toLowerCase() === selectedTopic.toLowerCase());
+
+                    if (currentTopicIdx !== -1 && currentTopicIdx < uniqueTopics.length - 1) {
+                        // Chuyển sang Chủ đề kế tiếp
+                        const nextTopic = uniqueTopics[currentTopicIdx + 1];
+                        selectTopicAndInitialize(nextTopic);
+                        showToast(`Hoàn tất tất cả Mẫu câu! Tự động chuyển sang Chủ đề tiếp theo: "${nextTopic}"`, "success");
+                    } else if (uniqueTopics.length > 0) {
+                        // Nếu là chủ đề cuối cùng trong danh sách -> Quay về chủ đề đầu tiên
+                        const firstTopic = uniqueTopics[0];
+                        selectTopicAndInitialize(firstTopic);
+                        showToast(`Đã hoàn thành tất cả các Chủ đề! Quay lại Chủ đề đầu tiên: "${firstTopic}"`, "success");
+                    } else {
+                        currentDrillIndex = 0;
+                    }
                 }
             } else if (direction < 0 && nextDrillIdx < 0) {
                 if (currentPatternIndex > 0) {
@@ -1009,6 +1044,25 @@
                     currentDrillData = currentTopicDatasets[currentPatternIndex];
                     currentDrillIndex = currentDrillData.substitutionWords.length - 1;
                     updatePatternDropdown();
+                } else {
+                    // Lùi về Chủ đề trước đó nếu bấm lùi ở Mẫu 1 Drill 1
+                    const uniqueTopics = [];
+                    importedDatasets.forEach(ds => {
+                        if (!uniqueTopics.some(t => t.toLowerCase() === ds.topic.toLowerCase())) {
+                            uniqueTopics.push(ds.topic);
+                        }
+                    });
+                    const currentTopicIdx = uniqueTopics.findIndex(t => t.toLowerCase() === selectedTopic.toLowerCase());
+                    if (currentTopicIdx > 0) {
+                        const prevTopic = uniqueTopics[currentTopicIdx - 1];
+                        selectedTopic = prevTopic;
+                        currentTopicDatasets = importedDatasets.filter(ds => ds.topic.toLowerCase() === prevTopic.toLowerCase());
+                        currentPatternIndex = currentTopicDatasets.length - 1;
+                        currentDrillData = currentTopicDatasets[currentPatternIndex];
+                        currentDrillIndex = currentDrillData.substitutionWords.length - 1;
+                        updateTopicDropdown();
+                        showToast(`Chuyển về chủ đề trước: "${prevTopic}"`);
+                    }
                 }
             }
 
@@ -1020,17 +1074,38 @@
             }
         }
 
+        // HÀM PHÁT ÂM AN TOÀN - HỖ TRỢ CALLBACK SAU KHI ĐỌC XONG 100% CÂU
         function speakText(text, callback = null) {
-            if (!text) return;
+            if (!text) {
+                if (callback && typeof callback === 'function') callback();
+                return;
+            }
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'en-US';
                 utterance.rate = 0.92;
-                if (callback && typeof callback === 'function') {
-                    utterance.onend = callback;
-                }
+
+                let hasCalled = false;
+                const safeCallback = () => {
+                    if (!hasCalled) {
+                        hasCalled = true;
+                        if (callback && typeof callback === 'function') {
+                            callback();
+                        }
+                    }
+                };
+
+                utterance.onend = safeCallback;
+                utterance.onerror = safeCallback;
+
+                // Fallback an toàn nếu trình duyệt bị đơ/treo không bắn onend
+                const estimatedMs = Math.max(1800, (text.length / 10) * 1000 + 1200);
+                setTimeout(safeCallback, estimatedMs);
+
                 window.speechSynthesis.speak(utterance);
+            } else {
+                if (callback && typeof callback === 'function') callback();
             }
         }
 
@@ -1144,6 +1219,7 @@
             }
         }
 
+        // YÊU CẦU 2: KHI ĐIỂM ≥50%, ĐỌC HẾT 100% CÂU ĐÚNG MỚI BẮT ĐẦU ĐẾM GIỜ CHUYỂN CÂU
         function evaluateSpeechScore(spoken, target, mode = 'substitution') {
             if (!target) return;
             const cleanSpoken = spoken.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
@@ -1183,19 +1259,25 @@
                     updateMicUI(false);
                 }
 
-                setTimeout(() => {
-                    speakText(target);
-                }, 200);
+                const isAutoNext = document.getElementById('auto-next-toggle')?.checked;
 
-                if (document.getElementById('auto-next-toggle').checked) {
-                    autoNextTimeout = setTimeout(() => {
-                        if (mode === 'full-monologue') {
-                            navigateFullMonologue(1);
-                        } else {
-                            navigateDrill(1);
-                        }
-                    }, 2400);
-                }
+                // CALLBACK CHỜ ĐỌC HẾT CÂU ĐÚNG 100% MỚI KÍCH HOẠT CHUYỂN CÂU
+                const onTargetSpeechEnd = () => {
+                    if (isAutoNext) {
+                        autoNextTimeout = setTimeout(() => {
+                            if (mode === 'full-monologue') {
+                                navigateFullMonologue(1);
+                            } else {
+                                navigateDrill(1);
+                            }
+                        }, 600); // Tạm dừng 600ms dễ chịu sau khi loa phát xong hết câu
+                    }
+                };
+
+                // Đọc câu đáp án chuẩn và chỉ chuyển câu sau khi TTS kết thúc
+                setTimeout(() => {
+                    speakText(target, onTargetSpeechEnd);
+                }, 200);
             }
         }
 
