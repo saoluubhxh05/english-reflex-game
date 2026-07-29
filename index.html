@@ -193,7 +193,7 @@
                             <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
                             <span>Câu Hỏi Cho Mẫu Câu</span>
                         </span>
-                        <button onclick="speakText(currentDrillData.question)" class="text-teal-700 hover:text-teal-900 bg-teal-200/60 hover:bg-teal-200 p-1.5 rounded-lg transition flex items-center space-x-1 text-xs font-bold" title="Nghe câu hỏi">
+                        <button onclick="speakText(currentDrillData ? currentDrillData.question : '')" class="text-teal-700 hover:text-teal-900 bg-teal-200/60 hover:bg-teal-200 p-1.5 rounded-lg transition flex items-center space-x-1 text-xs font-bold" title="Nghe câu hỏi">
                             <i data-lucide="volume-2" class="w-4 h-4"></i>
                             <span>Đọc hỏi</span>
                         </button>
@@ -201,7 +201,7 @@
                     <p id="drill-question-text" class="text-base sm:text-lg font-bold text-slate-900">What kind of person is he?</p>
                 </div>
 
-                <!-- 2 & 3. MẪU CÂU & TỪ GỢI MỞ -->
+                <!-- 2 & 3. MẪU CÂU & TỪ GỢI MỜ -->
                 <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                     <div>
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Mẫu Câu Chuẩn (Pattern):</span>
@@ -259,7 +259,7 @@
                             </div>
                             <div>
                                 <p id="drill-score-label" class="text-xs font-bold text-slate-600 uppercase">Chưa phát âm</p>
-                                <p class="text-[11px] text-slate-400">Độ khớp $\ge 50\%$ sẽ tự hiện đáp án & chuyển!</p>
+                                <p class="text-[11px] text-slate-400">Độ khớp ≥ 50% sẽ tự hiện đáp án & chuyển!</p>
                             </div>
                         </div>
 
@@ -316,7 +316,7 @@
                             </h2>
                             <p class="text-xs text-slate-500">Nạp file bài tập (.xlsx, .xls, .csv) với đầy đủ các cột Mẫu câu, Câu hỏi & Substitution Drills</p>
                         </div>
-                        <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-full">Excel Engine v0.19</span>
+                        <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-full">Excel Engine v0.20</span>
                     </div>
 
                     <!-- DRAG & DROP AREA -->
@@ -362,14 +362,21 @@
 
             </div>
 
-            <!-- DATA GRID PREVIEW TABLE -->
+            <!-- DATA GRID PREVIEW TABLE (CÓ TÍCH HỢP NÚT XÓA TOÀN BỘ DỮ LIỆU) -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-6">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
                         <h3 class="font-bold text-base text-slate-900">Danh Sách Bộ Mẫu Câu & Substitution Drills Khả Dụng</h3>
                         <p class="text-xs text-slate-500">Chọn một bộ bài tập dưới đây để kích hoạt vào module luyện phản xạ</p>
                     </div>
-                    <span id="data-count-badge" class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">1 Bộ bài tập</span>
+                    <div class="flex items-center space-x-2">
+                        <span id="data-count-badge" class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1.5 rounded-xl">1 Bộ bài tập</span>
+                        <!-- NÚT XÓA TOÀN BỘ DỮ LIỆU CẬP NHẬT MỚI -->
+                        <button onclick="openClearConfirmModal()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 transition shadow-sm hover:shadow-md active:scale-95">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            <span>Xóa toàn bộ dữ liệu</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- TABLE GRID -->
@@ -400,10 +407,36 @@
     <!-- FOOTER STATUS BAR -->
     <footer class="bg-slate-900 text-slate-400 text-xs py-3 border-t border-slate-800 mt-auto">
         <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-between gap-2">
-            <span>EngSpur Reflex Engine v2.9 • Auto-Saved State Enabled (≥50% Auto-Next)</span>
+            <span>EngSpur Reflex Engine v3.0 • Data Management Module</span>
             <span>Giọng nhận diện: SpeechRecognition (en-US)</span>
         </div>
     </footer>
+
+    <!-- MODAL CONFIRM CLEAR ALL DATA (MODAL XÁC NHẬN XÓA TOÀN BỘ DỮ LIỆU) -->
+    <div id="clear-confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="flex items-center space-x-3 text-rose-600">
+                <div class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
+                    <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base text-slate-900">Xác nhận xóa toàn bộ dữ liệu?</h3>
+                    <p class="text-xs text-slate-500">Hành động này không thể hoàn tác!</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Tất cả các bộ mẫu câu đã import, từ vựng và lịch sử tiến trình học tập lưu trên máy tính sẽ bị xóa hoàn toàn.
+            </p>
+            <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+                <button onclick="closeClearConfirmModal()" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-200 transition">
+                    Hủy bỏ
+                </button>
+                <button onclick="executeClearAllData()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-rose-600/20">
+                    Xóa sạch toàn bộ
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL IMPORT BẢNG MẪU CÂU TEXT JSON -->
     <div id="import-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -425,7 +458,7 @@
 
     <!-- JAVASCRIPT LOGIC ENGINE -->
     <script>
-        // DATASETS PRESETS ACCORDING TO SPECIFICATIONS (Multiple patterns per topic)
+        // DATASETS PRESETS ACCORDING TO SPECIFICATIONS
         let sampleDataset1 = {
             id: "preset-001",
             topic: "Describe Person",
@@ -527,7 +560,8 @@
                 selectedTopic: selectedTopic,
                 currentPatternIndex: currentPatternIndex,
                 currentDrillIndex: currentDrillIndex,
-                datasetScoresMap: datasetScoresMap
+                datasetScoresMap: datasetScoresMap,
+                importedDatasets: importedDatasets
             };
             try {
                 localStorage.setItem('engspur_reflex_progress', JSON.stringify(state));
@@ -541,6 +575,9 @@
                 const saved = localStorage.getItem('engspur_reflex_progress');
                 if (saved) {
                     const state = JSON.parse(saved);
+                    if (state.importedDatasets && state.importedDatasets.length > 0) {
+                        importedDatasets = state.importedDatasets;
+                    }
                     if (state.datasetScoresMap) datasetScoresMap = state.datasetScoresMap;
 
                     if (state.selectedTopic && importedDatasets.some(ds => ds.topic.toLowerCase() === state.selectedTopic.toLowerCase())) {
@@ -555,7 +592,7 @@
 
                         currentDrillData = currentTopicDatasets[currentPatternIndex];
 
-                        if (state.currentDrillIndex !== undefined && state.currentDrillIndex < currentDrillData.substitutionWords.length) {
+                        if (state.currentDrillIndex !== undefined && currentDrillData && currentDrillData.substitutionWords && state.currentDrillIndex < currentDrillData.substitutionWords.length) {
                             currentDrillIndex = state.currentDrillIndex;
                         } else {
                             currentDrillIndex = 0;
@@ -569,6 +606,58 @@
                 console.error("Failed to load progress from LocalStorage", e);
             }
             return false;
+        }
+
+        // CLEAR ALL DATA MODULE IMPLEMENTATION
+        function openClearConfirmModal() {
+            document.getElementById('clear-confirm-modal').classList.remove('hidden');
+        }
+
+        function closeClearConfirmModal() {
+            document.getElementById('clear-confirm-modal').classList.add('hidden');
+        }
+
+        function executeClearAllData() {
+            // Reset state
+            importedDatasets = [];
+            datasetScoresMap = {};
+            currentTopicDatasets = [];
+            currentDrillData = null;
+            currentPatternIndex = 0;
+            currentDrillIndex = 0;
+            selectedTopic = "";
+
+            // Clear localStorage
+            try {
+                localStorage.removeItem('engspur_reflex_progress');
+            } catch (e) {
+                console.error("Error clearing LocalStorage", e);
+            }
+
+            // Update UI across tabs
+            updateTopicDropdown();
+            renderDatasetTable();
+            renderEmptySubstitutionState();
+            closeClearConfirmModal();
+
+            showToast("Đã xóa sạch toàn bộ dữ liệu bài tập và tiến trình học!");
+        }
+
+        function renderEmptySubstitutionState() {
+            document.getElementById('active-pattern-text').innerText = "Chưa có dữ liệu";
+            document.getElementById('active-drill-count').innerText = "0 Drills";
+            document.getElementById('drill-question-text').innerText = "Vui lòng import dữ liệu ở Tab 3";
+            document.getElementById('drill-pattern-text').innerText = "Chưa có mẫu câu";
+            document.getElementById('drill-cue-word').innerText = "N/A";
+            document.getElementById('drill-sub-word').innerText = "N/A";
+            document.getElementById('drill-sub-dich-word').innerText = "N/A";
+            document.getElementById('drill-target-sentence').innerText = "";
+            document.getElementById('drill-target-vietnamese').innerText = "";
+            document.getElementById('drill-step-indicator').innerText = "Mẫu 0/0 • Drill 0/0";
+            
+            document.getElementById('drill-target-container').classList.add('hidden');
+            document.getElementById('drill-locked-hint').classList.remove('hidden');
+            updateScoreDisplay(null);
         }
 
         function showToast(message, type = "success") {
@@ -609,7 +698,7 @@
                 btnMonologue.className = "px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap bg-indigo-600 text-white shadow-sm";
             } else if (tabName === 'substitution') {
                 btnSub.className = "px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap bg-teal-600 text-white shadow-sm";
-                if (document.getElementById('auto-tts-question-toggle').checked) {
+                if (currentDrillData && document.getElementById('auto-tts-question-toggle').checked) {
                     setTimeout(() => speakText(currentDrillData.question), 300);
                 }
             } else if (tabName === 'data') {
@@ -621,6 +710,15 @@
             const select = document.getElementById('topic-select');
             if (!select) return;
             select.innerHTML = '';
+
+            if (importedDatasets.length === 0) {
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "-- Chưa có dữ liệu --";
+                select.appendChild(option);
+                updatePatternDropdown();
+                return;
+            }
 
             const uniqueTopics = [];
             importedDatasets.forEach(ds => {
@@ -647,8 +745,19 @@
             if (!patternSelect) return;
             patternSelect.innerHTML = '';
 
+            if (importedDatasets.length === 0) {
+                const option = document.createElement('option');
+                option.value = 0;
+                option.textContent = "-- Không có mẫu câu --";
+                patternSelect.appendChild(option);
+                return;
+            }
+
             currentTopicDatasets = importedDatasets.filter(ds => ds.topic.toLowerCase() === selectedTopic.toLowerCase());
-            if (currentTopicDatasets.length === 0) currentTopicDatasets = [ sampleDataset1 ];
+            if (currentTopicDatasets.length === 0 && importedDatasets.length > 0) {
+                currentTopicDatasets = [ importedDatasets[0] ];
+                selectedTopic = currentTopicDatasets[0].topic;
+            }
 
             currentTopicDatasets.forEach((ds, pIdx) => {
                 const option = document.createElement('option');
@@ -666,7 +775,13 @@
             currentTopicDatasets = importedDatasets.filter(ds => ds.topic.toLowerCase() === topicName.toLowerCase());
 
             if (currentTopicDatasets.length === 0) {
-                currentTopicDatasets = [ sampleDataset1 ];
+                if (importedDatasets.length > 0) {
+                    currentTopicDatasets = [ importedDatasets[0] ];
+                    selectedTopic = currentTopicDatasets[0].topic;
+                } else {
+                    renderEmptySubstitutionState();
+                    return;
+                }
             }
 
             currentPatternIndex = 0;
@@ -693,6 +808,11 @@
         }
 
         function renderSubstitutionModule() {
+            if (!currentDrillData) {
+                renderEmptySubstitutionState();
+                return;
+            }
+
             // Update Active Pattern Badge in Toolbar
             const totalPatterns = currentTopicDatasets.length;
             document.getElementById('active-pattern-text').innerText = `Mẫu ${currentPatternIndex + 1}/${totalPatterns}: ${currentDrillData.pattern}`;
@@ -750,6 +870,7 @@
         }
 
         function navigateDrill(direction) {
+            if (!currentDrillData) return;
             clearTimeout(autoNextTimeout);
             let nextDrillIdx = currentDrillIndex + direction;
 
@@ -779,12 +900,13 @@
             renderSubstitutionModule();
             saveProgressToLocalStorage();
 
-            if (document.getElementById('auto-tts-question-toggle').checked) {
+            if (document.getElementById('auto-tts-question-toggle').checked && currentDrillData) {
                 speakText(currentDrillData.question);
             }
         }
 
         function speakText(text) {
+            if (!text) return;
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
@@ -820,7 +942,7 @@
                 document.getElementById('drill-transcript-text').innerText = `"${transcript}"`;
                 document.getElementById('drill-transcript-text').classList.remove('italic');
 
-                if (event.results[0].isFinal) {
+                if (event.results[0].isFinal && currentDrillData) {
                     evaluateSpeechScore(transcript, currentDrillData.substitutionDrills[currentDrillIndex]);
                 }
             };
@@ -890,7 +1012,6 @@
             updateScoreDisplay(similarity);
             saveProgressToLocalStorage();
 
-            // REQUIREMENT: Khi độ khớp đủ 50%, tự động hiện Target Drill & Bản dịch, đọc Target Drill và chuyển sang câu/Mẫu câu mới
             if (similarity >= 50) {
                 document.getElementById('drill-target-container').classList.remove('hidden');
                 document.getElementById('drill-locked-hint').classList.add('hidden');
@@ -901,12 +1022,10 @@
                     updateMicUI(false);
                 }
 
-                // Phát âm câu đáp án chuẩn
                 setTimeout(() => {
                     speakText(target);
                 }, 200);
 
-                // Tự động chuyển câu hoặc chuyển Mẫu câu mới
                 if (document.getElementById('auto-next-toggle').checked) {
                     autoNextTimeout = setTimeout(() => {
                         navigateDrill(1);
@@ -946,6 +1065,10 @@
         }
 
         function changeTopic(val) {
+            if (!val) {
+                renderEmptySubstitutionState();
+                return;
+            }
             selectTopicAndInitialize(val);
             renderDatasetTable();
             showToast(`Đã chọn chủ đề: "${val}"`);
@@ -1050,8 +1173,23 @@
             document.getElementById('data-count-badge').innerText = `${importedDatasets.length} Bộ bài tập`;
             tableBody.innerHTML = '';
 
+            if (importedDatasets.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan="7" class="p-8 text-center text-slate-400 italic">
+                        <div class="flex flex-col items-center justify-center space-y-2">
+                            <i data-lucide="inbox" class="w-8 h-8 text-slate-300"></i>
+                            <span>Chưa có dữ liệu. Vui lòng kéo thả hoặc chọn file Excel bài tập để tải lên.</span>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+                lucide.createIcons();
+                return;
+            }
+
             importedDatasets.forEach((ds, idx) => {
-                const isActive = ds.id === currentDrillData.id;
+                const isActive = currentDrillData && ds.id === currentDrillData.id;
                 const tr = document.createElement('tr');
                 tr.className = `hover:bg-slate-50/80 transition-colors ${isActive ? 'bg-indigo-50/60 font-semibold' : ''}`;
                 tr.innerHTML = `
